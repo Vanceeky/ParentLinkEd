@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../Dashboard/material-dashboard-master"
+		},
+		{
+			"path": "../../../../Dashboard/material-dashboard-bs4"
+		}
+	],
+	"settings": {}
+}

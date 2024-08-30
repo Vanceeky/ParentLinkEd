@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %} Subjects {% endblock %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <h6 class="m-3">Subjects</h6>
+        <p class="text-sm mb-0">
+            <a href="" class="btn bg-gradient-success" type="button" data-bs-toggle="modal" data-bs-target="#add_subject"><span class="font-weight-bold text-white ms-1"><i class="fa fa-plus mx-2"></i>Add Subject</span></a>
+        </p>
+    </div>
+    {% for subj in subjects%}
+
+    <div class="col-xl-4 mb-xl-0 mb-4 mt-3">
+        <div class="card bg-transparent shadow-xl">
+        <div class="overflow-hidden position-relative border-radius-xl">
+            <img src="/static/assets/img/illustrations/pattern-tree.svg" class="position-absolute opacity-2 start-0 top-0 w-100 z-index-1 h-100" alt="pattern-tree">
+            <span class="mask bg-gradient-success opacity-10"></span>
+            <div class="card-body position-relative z-index-1 p-3">
+                
+                <p class="text-white text-sm opacity-8 mb-0">{{ subj.year_level_section.year_level}}: {{ subj.year_level_section.section}}</p>
+                
+                <h5 class="text-white mt-4 mb-3 pb-2">{{subj.name}}<br><span><p>{{ subj.description}}</p></span></h5>
+                
+                <div class="d-flex">
+                    <div class="d-flex">
+                    <div class="me-4">
+                        <p class="text-white text-sm opacity-8 mb-0">Instructor</p>
+                        {% if subj.instructor.exists %}
+                        {% for instructor in subj.instructor.all %}
+                        <h6 class="text-white mb-0 text-capitalize">{{ instructor.user.first_name }} {{ instructor.user.last_name}}</h6>
+                        {% endfor %}
+                        
+                        {% else %}
+                        
+                        <h6 class="text-white mb-0">No instructor assigned</h6>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <p class="text-white text-sm opacity-8 mb-0">Schedule</p>
+                        <h6 class="text-white mb-0">{{ subj.day }} {{ subj.start_time}} - {{ subj.end_time}}</h6>
+                    </div>
+                    </div>
+                    <div class="ms-auto w-20 d-flex align-items-end justify-content-end">
+                    <img class="w-60 mt-2" src="/static/assets/img/logo.png" alt="logo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+    
+</div>
+
+
+<h1>Year Level and Section</h1>
+
+{% for year_level, sections in grouped_sections.items %}
+<h2>{{ year_level }}</h2>
+<ul>
+    {% for section in sections %}
+    <li>{{ section }}</li>
+    {% endfor %}
+</ul>
+{% endfor %}
+
+
+
+<!-- MODAL -->
+
+<!-- Modal -->
+<div class="modal fade" id="add_subject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add New Subject</h5>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn bg-gradient-success">Save changes</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+
+{% endblock %}
