@@ -7,3 +7,5 @@ from . models import *
 admin.site.register(YearLevelSection)
 admin.site.register(Subject)
 admin.site.register(Instructor)
+admin.site.register(Student)
+admin.site.register(Guardian)

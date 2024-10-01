@@ -1,0 +1,105 @@
+{% extends 'base/instructor/base.html' %}
+
+{% block title %} Students {% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-9 col-md-7 mb-md-0 mb-4">
+
+  
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h6>List of Students</h6>
+                <p class="text-sm mb-0">
+                    <i class="fa fa-plus text-info" aria-hidden="true"></i>
+                    <a href="" type="button" data-bs-toggle="modal" data-bs-target="#add_new_instructor"><span class="font-weight-bold text-success ms-1">Add New</span></a>
+                </p>
+            </div>
+
+
+            <div class="table-responsive p-3">
+              <table class="table align-items-center mb-0 mt-0 p-3" id="student_table">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Student</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Contact</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Guardian</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Year Level / Section</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+
+                    <tr>
+                        <td>
+                        <div class="d-flex px-2 py-1">
+                            <div>
+                            <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ student.firstname }} {{ student.lastname }} ( Male, 22 )</h6>
+                            <p class="text-sm text-secondary mb-0">{{ student.id }}</p>
+                            </div>
+                        </div>
+                        </td>
+                        <td>
+                        <p class="text-sm font-weight-bold mb-0">09456656707</p>
+                        <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                            
+                        {% for guard in student.guardians.all %}
+                            <p class="text-sm font-weight-bold mb-0">{{ guard.user.first_name }} {{ guard.user.last_name}}</p>
+                            
+                            <p class="text-sm text-secondary mb-0">( {{ guard.id }} )</p>
+                        {% empty  %}
+
+                        <p class="text-sm text-secondary mb-0">No guardian assigned</p>
+                        {% endfor %}
+                        </td>
+                        <td class="align-middle text-center">
+                            {% for guard in student.guardians.all %}
+                            <p class="text-sm font-weight-bold mb-0">{{ guard.contact_number }}</p>
+                            <p class="text-sm text-secondary mb-0">{{ guard.address }}</p>
+                            {% endfor %}
+                        </td>
+                        <td class="align-middle text-center">
+                            <span class="text-secondary text-sm font-weight-normal">{{ student.year_level_section}}</span>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+
+
+                </tbody>
+              </table>
+            </div>
+
+
+        </div>
+ 
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+
+{% block js %}
+
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+<script>
+    let table = new DataTable('#student_table');
+
+</script>
+
+
+{% endblock %}

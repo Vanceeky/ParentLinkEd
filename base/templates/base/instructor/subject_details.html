@@ -1,0 +1,404 @@
+{% extends 'base/instructor/base.html' %}
+
+{% block title %} {{ subject.name }} {% endblock %}
+
+{% block stylesheet %}
+
+<style>
+    .button-like {
+        cursor: pointer; /* Change cursor to indicate it's clickable */
+        transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    }
+    
+    .button-like:hover {
+        transform: scale(1.02); /* Scale the card up slightly */
+        background-color: rgba(0, 123, 255, 0.1); /* Change to your desired hover color */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+    }
+
+    #editor {
+        width: 100%; /* Adjust width as needed */
+        height: 200px; /* Adjust height as needed */
+      }
+</style>
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+
+<div class="row">
+    <div class=" col-12">
+        <div class="card">
+            <div class="card-header p-3">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nav-wrapper position-relative end-0">
+                            <ul class="nav nav-pills nav-fill p-1 flex-row" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" id="stream-tab" data-bs-toggle="pill" href="#stream" aria-selected="true">
+                                        <i class="fa-solid fa-bars-staggered"></i>
+                                        <span class="ms-2">Stream</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center" id="attendance-tab" data-bs-toggle="pill" href="#attendance" aria-selected="false" tabindex="-1">
+                                        <i class="fa-solid fa-clipboard-user"></i>
+                                        <span class="ms-2">Attendance</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <hr class="horizontal dark mb-0">
+            </div>
+            <div class="card-body p-3 pt-0">
+
+                    <div class="d-flex justify-content-center">
+                        
+
+                        <div class="col-lg-8 col-12 mb-xl-0 mb-4 mt-3">
+
+                            <div class="tab-content mt-3">
+
+                                <div class="tab-pane fade show active" id="stream" role="tabpanel" aria-labelledby="stream-tab">
+                                    <div class="card bg-transparent shadow-xl">
+                                        <div class="overflow-hidden position-relative border-radius-xl">
+                                            <img src="/static/assets/img/img_bookclub.jpg" class="position-absolute start-0 top-0 w-100 z-index-1 h-100" alt="pattern-tree">
+                                            <!--<span class="mask bg-gradient-success opacity-10"></span>-->
+        
+                                            <div class="card-body position-relative z-index-1 p-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                
+                                            
+                                                    <a href=""><h6 class="text-white text-md mb-0">{{ subject.day }} :  {{ subject.start_time }} - {{ subject.end_time }}</h6></a>
+                                                    
+                                                    
+                            
+                                                </div>
+                                                <h5 class="text-white mt-4 text-uppercase">{{subj.name}}<br><span class="text-capitalize"><p>{{ subj.description}}</p></span></h5>
+                                                
+        
+                                                <div class="d-flex mb-0">
+                                
+        
+                                                    <h3 class="text-white mt-4 text-uppercase">{{subject.name}}<br>
+                                                        
+                                                        {% for section, students in sections_with_students %}
+                                                        <span class="text-capitalize"><p> {{ section.year_level }} - {{ section.section }}</p></span>
+                                                        {% empty %}
+                                                        <li>No sections found for this subject.</li>
+                                                        {% endfor %}
+                                                    </h3>
+                                                        
+                                                    
+                    
+                    
+                                                </div>
+                                
+                                                 
+                            
+                            
+                                            </div>
+                                        </div>
+                                      
+                                    </div>
+
+                                    <div class=" mt-4">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-3">
+                                                <div class="card">
+                                                    asd
+                                                </div>
+        
+                                                <div class="card mt-4">
+                                                    asd
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-12 col-lg-9">
+                                                <div id="announcement" class="card shadow p-2 mb-5 bg-body rounded button-like" onclick="toggleAnnouncementDisplay()">
+                                                    <div class="d-flex px-2 py-1">
+                                                        <div>
+                                                            <img src="/static/assets/img/logo.png" class="avatar avatar-lg me-3">
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm text-capitalize"><a href="#" class="text-decoration-none">Announce something to your class</a></h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div id="display_announcement" class="card shadow p-3" style="display: none;">
+                                                    <label>Announce something to your class</label>
+                                                    <div id="editor"></div>
+                                                
+                                                    <div class="d-flex justify-content-between align-items-center mt-2 p-2">
+                                                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modal-announce">
+                                                            <i class="fa fa-user"></i> <span id="student_number">All Students</span>
+                                                        </button>
+                                                        <div>
+                                                            <a type="button" class="btn text-danger ml-auto" onclick="toggleAnnouncementDisplay()">Cancel</a>
+                                                            <button type="button" class="btn btn-info">Post</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+        
+                                                <div class="card shadow mt-3 p-4">
+                                                    <div class="card-body p-3">
+                                                       <div class="d-flex">
+                                                        <div class="icon icon-shape bg-gradient-dark text-center rounded-circle ms-auto">
+                                                            <i class="fa fa-book text-lg opacity-10" aria-hidden="true"></i>
+                                                         </div>
+        
+                                                          <div class="numbers mb-0 ms-3">
+                                                             <h4 class="text-muted font-weight-bolder mb-0">This is where you can talk to your class</h4>
+                                                             <p class="mb-0">
+                                                                Use the stream to share announcements, post assignments and respond to questions.
+                                                             </p>
+                                                          </div>
+        
+                                                       </div>
+        
+                                                    </div>
+                                                </div>
+        
+                                            </div>
+        
+        
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane fade" id="attendance" role="tabpanel" aria-labelledby="attendance-tab">
+                                    <div class="d-flex justify-content-between align-items-center">
+
+                                        <h5>Attendance</h5>
+                                        <p id="date_time"></p>
+                                    </div>
+
+                                    <div class="table-responsive p-3">
+                                        <table class="table align-items-center mb-0 mt-0 p-3" id="student_table">
+                                          <thead>
+                                            <tr>
+                                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Student</th>
+                                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Guardian</th>
+                                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact</th>
+                                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for section, students in sections_with_students %}
+                                            {% for student in students %}
+                          
+                                              <tr>
+                                                  <td>
+                                                  <div class="d-flex px-2 py-1">
+                                                      <div>
+                                                      <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
+                                                      </div>
+                                                      <div class="d-flex flex-column justify-content-center">
+                                                      <h6 class="mb-0 text-sm">{{ student.firstname }} {{ student.lastname }} ( Male, 22 )</h6>
+                                                      <p class="text-sm text-secondary mb-0">{{ student.id }}</p>
+                                                      </div>
+                                                  </div>
+                                                  </td>
+
+                                                  <td class="align-middle text-center text-sm">
+                                                      
+                                                  {% for guard in student.guardians.all %}
+                                                      <p class="text-sm font-weight-bold mb-0">{{ guard.user.first_name }} {{ guard.user.last_name}}</p>
+                                                      
+                                                      <p class="text-sm text-secondary mb-0">( {{ guard.id }} )</p>
+                                                  {% empty  %}
+                          
+                                                  <p class="text-sm text-secondary mb-0">No guardian assigned</p>
+                                                  {% endfor %}
+                                                  </td>
+                                                  <td class="align-middle text-center">
+                                                      {% for guard in student.guardians.all %}
+                                                      <p class="text-sm font-weight-bold mb-0">{{ guard.contact_number }}</p>
+                                                      <p class="text-sm text-secondary mb-0">{{ guard.address }}</p>
+                                                      {% endfor %}
+                                                  </td>
+                                                  <td class="align-middle text-center d-flex">
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="customRadio1">
+                                                        <label class="custom-control-label" for="customRadio1">Present</label>
+                                                      </div>
+                                                      <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="customRadio2">
+                                                        <label class="custom-control-label" for="customRadio2">Absent</label>
+                                                      </div>
+                                                  </td>
+                          
+                                              </tr>
+                          
+                                              {% endfor %}
+                                              {% endfor %}
+
+                                              
+
+                          
+                          
+                          
+                          
+                                          </tbody>
+                                        </table>
+                                        <div class="text-center mt-4">
+                                        <a type="button" class="text-end btn btn-outline-secondary">Save Attendance</a>
+                                        </div>
+                                      </div>
+
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+
+                    </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODALS-->
+
+<div class="modal fade" id="modal-announce" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title font-weight-normal" id="modal-title-default">Announce To</h6>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="checkAll" onclick="toggleAllStudents(this)" checked>
+                <label class="custom-control-label" for="checkAll">All Students</label>
+            </div>
+
+            <hr class="dark horizontal">
+
+            {% for section, students in sections_with_students %}
+                {% for student in students %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="{{ student.id }}" id="student-{{ student.id }}" checked onchange="updateButtonLabel()">
+                    <label class="custom-control-label" for="student-{{ student.id }}">{{ student.firstname }} {{ student.lastname }}</label>
+                </div>
+                {% empty %}
+                    <div>No students enrolled</div>
+                {% endfor %}
+            {% endfor %}
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn bg-gradient-info" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+
+<script>
+    let table = new DataTable('#student_table');
+
+</script>
+
+<!-- Initialize Quill editor -->
+<script>
+  const quill = new Quill('#editor', {
+    theme: 'snow'
+  });
+</script>
+
+
+<script>
+    function toggleAnnouncementDisplay() {
+        const announcementDisplay = document.getElementById('display_announcement');
+        const announcement = document.getElementById('announcement');
+
+        if (announcementDisplay.style.display === 'none' || announcementDisplay.style.display === '') {
+            announcementDisplay.style.display = 'block';  // Show the announcement display
+            announcement.style.display = 'none';           // Hide the announcement section
+        } else {
+            announcementDisplay.style.display = 'none';   // Hide the announcement display
+            announcement.style.display = 'block';         // Show the announcement section
+        }
+    }
+</script>
+
+<script>
+    function toggleAllStudents(source) {
+        const checkboxes = document.querySelectorAll('.form-check-input[type="checkbox"]:not(#checkAll)');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked; 
+        });
+        updateButtonLabel(); 
+    }
+
+    function updateButtonLabel() {
+        const checkboxes = document.querySelectorAll('.form-check-input[type="checkbox"]:not(#checkAll)');
+        const checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+        const studentNumberLabel = document.getElementById('student_number');
+
+        if (document.getElementById('checkAll').checked) {
+            studentNumberLabel.textContent = 'All Students';
+        } else {
+            studentNumberLabel.textContent = checkedCount > 0 ? checkedCount + ' student' + (checkedCount > 1 ? 's' : '') : '';
+        }
+    }
+
+   
+    document.addEventListener('DOMContentLoaded', () => {
+        updateButtonLabel();
+    });
+</script>
+
+
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit', 
+            hour12: true 
+        };
+        const formattedDateTime = now.toLocaleString('en-US', options);
+        document.getElementById('date_time').innerText = formattedDateTime;
+    }
+
+    // Update the date and time immediately when the page loads
+    updateDateTime();
+
+    // Optionally, update every second
+    setInterval(updateDateTime, 1000);
+</script>
+
+
+{% endblock %}

@@ -27,8 +27,8 @@
             </div>
 
 
-            <div class="table-responsive">
-              <table class="table align-items-center mb-0 mt-0">
+            <div class="table-responsive p-3">
+              <table class="table align-items-center mb-0 mt-0 p-3" id="student_table">
                 <thead>
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Student</th>
@@ -36,10 +36,10 @@
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Guardian</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Year Level / Section</th>
-                    <th class="text-secondary opacity-7"></th>
                   </tr>
                 </thead>
                 <tbody>
+                    {% for student in students %}
 
                     <tr>
                         <td>
@@ -48,8 +48,8 @@
                             <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                             </div>
                             <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">John Michael ( Male, 22 )</h6>
-                            <p class="text-sm text-secondary mb-0">Student ID number</p>
+                            <h6 class="mb-0 text-sm">{{ student.firstname }} {{ student.lastname }} ( Male, 22 )</h6>
+                            <p class="text-sm text-secondary mb-0">{{ student.id }}</p>
                             </div>
                         </div>
                         </td>
@@ -58,99 +58,38 @@
                         <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
                         </td>
                         <td class="align-middle text-center text-sm">
-                            <p class="text-sm font-weight-bold mb-0">James Ivan Mingarine</p>
                             
-                            <p class="text-sm text-secondary mb-0">( Account ID )</p>
+                        {% for guard in student.guardians.all %}
+                            <p class="text-sm font-weight-bold mb-0">{{ guard.user.first_name }} {{ guard.user.last_name}}</p>
+                            
+                            <p class="text-sm text-secondary mb-0">( {{ guard.id }} )</p>
+                        {% empty  %}
+
+                        <p class="text-sm text-secondary mb-0">No guardian assigned</p>
+                        {% endfor %}
                         </td>
                         <td class="align-middle text-center">
-                            <p class="text-sm font-weight-bold mb-0">09456656707</p>
-                            <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
+                            {% for guard in student.guardians.all %}
+                            <p class="text-sm font-weight-bold mb-0">{{ guard.contact_number }}</p>
+                            <p class="text-sm text-secondary mb-0">{{ guard.address }}</p>
+                            {% endfor %}
                         </td>
                         <td class="align-middle text-center">
-                            <span class="text-secondary text-sm font-weight-normal">Grade 12: Earth</span>
+                            <span class="text-secondary text-sm font-weight-normal">{{ student.year_level_section}}</span>
                         </td>
-                        <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                            View
-                        </a>
-                        </td>
+
                     </tr>
 
-                    <tr>
-                        <td>
-                        <div class="d-flex px-2 py-1">
-                            <div>
-                            <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
-                            </div>
-                            <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">John Michael ( Male, 22 )</h6>
-                            <p class="text-sm text-secondary mb-0">Student ID number</p>
-                            </div>
-                        </div>
-                        </td>
-                        <td>
-                        <p class="text-sm font-weight-bold mb-0">09456656707</p>
-                        <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                            <p class="text-sm font-weight-bold mb-0">James Ivan Mingarine</p>
-                            
-                            <p class="text-sm text-secondary mb-0">( Account ID )</p>
-                        </td>
-                        <td class="align-middle text-center">
-                            <p class="text-sm font-weight-bold mb-0">09456656707</p>
-                            <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
-                        </td>
-                        <td class="align-middle text-center">
-                            <span class="text-secondary text-sm font-weight-normal">Grade 12: Earth</span>
-                        </td>
-                        <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                            View
-                        </a>
-                        </td>
-                    </tr>
+                    {% endfor %}
 
-                    <tr>
-                        <td>
-                        <div class="d-flex px-2 py-1">
-                            <div>
-                            <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
-                            </div>
-                            <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">John Michael ( Male, 22 )</h6>
-                            <p class="text-sm text-secondary mb-0">Student ID number</p>
-                            </div>
-                        </div>
-                        </td>
-                        <td>
-                        <p class="text-sm font-weight-bold mb-0">09456656707</p>
-                        <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                            <p class="text-sm font-weight-bold mb-0">James Ivan Mingarine</p>
-                            
-                            <p class="text-sm text-secondary mb-0">( Account ID )</p>
-                        </td>
-                        <td class="align-middle text-center">
-                            <p class="text-sm font-weight-bold mb-0">09456656707</p>
-                            <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
-                        </td>
-                        <td class="align-middle text-center">
-                            <span class="text-secondary text-sm font-weight-normal">Grade 12: Earth</span>
-                        </td>
-                        <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                            View
-                        </a>
-                        </td>
-                    </tr>
 
 
 
                 </tbody>
               </table>
             </div>
+
+
         </div>
  
     </div>
@@ -161,133 +100,7 @@
 
 
 
-  <!-- Modal -->
-  <div class="modal fade" id="add_new_instructor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add New Instructor</h5>
-          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form>
-            <div class="modal-body">
-                <div class="bs-stepper linear">
-                    <div class="bs-stepper-header" role="tablist">
-                    <div class="step active" data-target="#logins-part">
-                        <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger" aria-selected="true">
-                        <span class="bs-stepper-circle bg-gradient-success">1</span>
-                        <span class="bs-stepper-label text-sm">Instructor</span>
-                        </button>
-                    </div>
-                    <div class="line"></div>
-                    <div class="step" data-target="#information-part">
-                        <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="false" disabled="disabled">
-                        <span class="bs-stepper-circle bg-gradient-success text-sm">2</span>
-                        <span class="bs-stepper-label text-sm">Subjects</span>
-                        </button>
-                    </div>
-                    </div>
-                    <div class="bs-stepper-content">
-                    <form method="POST">
-                        <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group input-group-outline mb-3">
-                                        <label class="form-label">Firstname</label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group input-group-outline mb-3">
-                                        <label class="form-label">Lastname</label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="input-group input-group-outline mb-3">
-                                        <label class="form-label">Instructor ID Number</label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="input-group input-group-outline mb-3">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" class="form-control">
-                                    </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                    <div class="input-group input-group-outline mb-3">
-                                        <label class="form-label">Contact Number</label>
-                                        <input type="mail" class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    
-                                    <div class="d-flex align-items-center">
-                                        <label class="form-label">Gender:</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input bg-gradient-info" value="male" type="radio" name="gender" id="customRadio1">
-                                            <label class="custom-control-label" for="customRadio1">Male</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" value="female" type="radio" name="gender" id="customRadio2">
-                                            <label class="custom-control-label" for="customRadio2">Female</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <button type="button" class="btn btn-sm bg-gradient-secondary" onclick="stepper.next()">Next</button>
-                        </div>
-
-                        <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
-                            <div id="selection-container" class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group input-group-static mb-4">
-                                        <label for="exampleFormControlSelect1" class="ms-0">Please select a subject: </label>
-                                        <select class="form-control" name="subject" id="subject">
-                                            
-                                            <option>Mathematics ( MATH 101 )</option>
-                                            <option>Science ( SCI 101 )</option>
-                                            <option>Computer Science ( CS 101 )</option>
-                                            <option>History ( HIST 101 )</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group input-group-static mb-4">
-                                        <label for="exampleFormControlSelect1" class="ms-0">Please select a section: </label>
-                                        <select class="form-control" name="section" id="section">
-                                            <option>Grade 6: Section A</option>
-                                            <option>Grade 6: Section B</option>
-                                            <option>Grade 5: Section A</option>
-                                            <option>Grade 5: Section B</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                            <button type="button"  class="btn btn-sm bg-gradient-secondary" onclick="stepper.previous()">Previous</button>
-                            <button type="button" id="add-row" class="btn btn-sm bg-gradient-secondary">Add more subject</button>
-                            </div>
-
-                        </div>
-                    </form>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn bg-gradient-success">Save changes</button>
-            </div>
-        </form>
-      </div>
-    </div>
-  </div>
 
 
 
@@ -303,7 +116,11 @@
       })
 </script>
 
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+<script>
+    let table = new DataTable('#student_table');
 
+</script>
 
 
 {% endblock %}

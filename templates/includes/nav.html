@@ -15,7 +15,7 @@
 
 
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-            <span class="d-sm-inline mx-3">Admin</span>
+            <span class="d-sm-inline mx-3 text-uppercase">{{ request.user }}</span>
             <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
               
               <div class="sidenav-toggler-inner">
@@ -30,7 +30,7 @@
           <li class="nav-item d-flex align-items-center">
             <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
               <i class="fa fa-user me-sm-1"></i>
-              <span class="d-sm-inline d-none">Admin</span>
+              <span class="d-sm-inline d-none text-uppercase">{{ request.user}}</span>
             </a>
           </li>
         </ul>

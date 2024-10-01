@@ -1,0 +1,266 @@
+<!--
+=========================================================
+* Material Dashboard 2 - v3.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="/static/assets/img/favicon.png">
+  <title>
+    Login Account | ParentLinkED
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <!-- Nucleo Icons -->
+  <link href="/static/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="/static/assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <!-- CSS Files -->
+  <link id="pagestyle" href="/static/assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+
+  <style>
+    
+
+    #navigation a:hover {
+        border-bottom: 2px solid #4caf50;
+    }
+    
+
+
+
+  </style>
+
+
+</head>
+
+<body class="">
+  <div class="container position-sticky z-index-sticky top-0">
+    <div class="row">
+      <div class="col-12">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
+            <div class="container-fluid ps-2 pe-0">
+               <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="{% url 'index' %}">
+               ParentLinkED
+               </a>
+               <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon mt-2">
+               <span class="navbar-toggler-bar bar1"></span>
+               <span class="navbar-toggler-bar bar2"></span>
+               <span class="navbar-toggler-bar bar3"></span>
+               </span>
+               </button>
+               <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
+                  <ul class="navbar-nav navbar-nav-hover mx-auto">
+                     <li class="nav-item mx-2">
+                        <a href="{% url 'index' %}" role="button" class="nav-link ps-2 cursor-pointer"aria-expanded="false">
+                        Home
+
+                        </a>
+
+                     </li>
+                     <li class="nav-item mx-2">
+                      <a role="button" class="nav-link ps-2 cursor-pointer"aria-expanded="false">
+                      About Us
+
+                      </a>
+
+                     </li>
+
+                     <li class="nav-item mx-2">
+                      <a role="button" class="nav-link ps-2 cursor-pointer"aria-expanded="false">
+                      Contact
+
+                      </a>
+
+                     </li>
+
+                     <li class="nav-item mx-2">
+                      <a href="{% url 'accounts-login' %}" role="button" class="nav-link ps-2 cursor-pointer"aria-expanded="false">
+                      Login
+
+                      </a>
+
+                     </li>
+
+
+                     <!--
+                     <li class="nav-item dropdown dropdown-hover mx-2">
+                        <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuBlocks" data-bs-toggle="dropdown" aria-expanded="false">
+                        Account
+                        <img src=" /static/assets/img/down-arrow-dark.svg " alt="down-arrow" class="arrow ms-1 d-lg-block d-none">
+                        <img src="/static/assets/img/down-arrow-dark.svg" alt="down-arrow" class="arrow ms-1 d-lg-none d-block">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-animation dropdown-md dropdown-md-responsive p-3 border-radius-lg mt-0 mt-lg-3" aria-labelledby="dropdownMenuBlocks">
+                           <div class="d-none d-lg-block">
+                              <ul class="list-group">
+                                 <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                    <a class="dropdown-item border-radius-md mb-2" href="/static/pages/applications/kanban.html">
+                                       <div class="d-flex align-items-center text-dark">
+                                          <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                          Guardian
+                                       </div>
+                                    </a>
+                                 </li>
+                                 <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                    <a class="dropdown-item border-radius-md mb-2" href="/static/pages/applications/wizard.html">
+                                       <div class="d-flex align-items-center text-dark">
+                                          <i class="material-icons opacity-6 me-2 text-md">import_contacts</i>
+                                          Instructor
+                                       </div>
+                                    </a>
+                                 </li>
+                                 <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                    <a class="dropdown-item border-radius-md mb-2" href="/static/pages/applications/datatables.html">
+                                       <div class="d-flex align-items-center text-dark">
+                                          <i class="material-icons opacity-6 me-2 text-md">backup_table</i>
+                                          Registrar
+                                       </div>
+                                    </a>
+                                 </li>
+
+                              </ul>
+                           </div>
+                           <div class="row d-lg-none">
+                              <div class="col-md-12">
+                                 <a class="py-2 ps-3 border-radius-md" href="/static/pages/applications/kanban.html">
+                                    <div class="d-flex align-items-center text-dark">
+                                       <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                       Guardian
+                                    </div>
+                                 </a>
+                                 <a class="py-2 ps-3 border-radius-md" href="/static/pages/applications/wizard.html">
+                                    <div class="d-flex align-items-center text-dark">
+                                       <i class="material-icons opacity-6 me-2 text-md">import_contacts</i>
+                                       Instructor
+                                    </div>
+                                 </a>
+                                 <a class="py-2 ps-3 border-radius-md" href="/static/pages/applications/datatables.html">
+                                    <div class="d-flex align-items-center text-dark">
+                                       <i class="material-icons opacity-6 me-2 text-md">backup_table</i>
+                                       Registrar
+                                    </div>
+                                 </a>
+
+                              </div>
+                           </div>
+                        </div>
+                     </li>
+                  -->
+
+                  </ul>
+                  <ul class="navbar-nav d-lg-block d-none">
+                     <li class="nav-item">
+                        <a href="https://www.facebook.com/LaSaletteSchool/" class="btn btn-sm  bg-gradient-info  mb-0"><i class="fa fa-facebook me-2" style="font-size: 10px;"></i>Follow Us</a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+          </nav>
+        <!-- End Navbar -->
+      </div>
+    </div>
+  </div>
+
+  <header class="header-rounded-images">
+    <div class="page-header min-vh-90">
+      <img class="position-absolute fixed-top ms-auto w-50 h-100 z-index-0 d-none d-sm-none d-md-block border-radius-section border-top-end-radius-0 border-top-start-radius-0 border-bottom-end-radius-0" src="/static/assets/img/123.jfif" alt="image" loading="lazy">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-7 d-flex">
+            <div class="card card-body blur text-md-start text-center px-sm-5 shadow-lg mt-sm-5 py-sm-5">
+              <h2 class="text-dark mb-4">Stay Connected with Your Child's Education</h2>
+
+
+              <h4 class="font-weight-bolder">Sign In</h4>
+                        {% if messages %}
+                        <div id="message-container">
+                            {% for msg in messages %}
+                                <p class="mb-0 text-danger">{{ msg }}</p>
+                            {% endfor %}
+                        </div>
+                        <script>
+                            // Remove messages after 5 seconds
+                            setTimeout(function() {
+                                const messageContainer = document.getElementById('message-container');
+                                if (messageContainer) {
+                                    messageContainer.style.transition = "opacity 0.5s ease"; // Add transition for smooth fade-out
+                                    messageContainer.style.opacity = '0'; // Fade out effect
+                                    
+                                    // After fading out, hide the message container and change back to the default message
+                                    setTimeout(function() {
+                                        messageContainer.style.display = 'none'; // Hide the message container
+                                        
+                                        // Update the message container with the default message
+                                        messageContainer.innerHTML = '<p class="mb-0">Enter your username and password to sign in</p>';
+                                        
+                                        // Show the updated message container
+                                        messageContainer.style.display = 'block'; // Show the container again
+                                        messageContainer.style.opacity = '1'; // Reset opacity for future messages
+                                    }, 500); // Match this duration to the transition duration
+                                }
+                            }, 3000);
+                        </script>
+                        {% else %}
+                            <p class="mb-0">Enter your username and password to sign in</p>
+                        {% endif %}
+              
+
+                    <div class="">
+                        <form role="form" method="POST" action="{% url 'login-account' %}">
+                            {% csrf_token %}
+
+                        <div class="input-group input-group-outline my-3">
+                            <input type="text" name="username" class="form-control" placeholder="Username">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <input type="password" name="password" class="form-control" placeholder="Password">
+                        </div>
+
+                        <!--
+                        <div class="form-check form-switch d-flex align-items-center mb-3">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label mb-0 ms-3" for="rememberMe">Remember me</label>
+                        </div>
+                        -->
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-lg bg-gradient-success btn-lg w-100 mt-4 mb-0">Sign in</button>
+                        </div>
+                        </form>
+                    </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!--   Core JS Files   -->
+  {% include 'includes/scripts.html ' %}
+</body>
+
+</html>
