@@ -20,11 +20,10 @@
 
 
             <div class="table-responsive p-3">
-              <table class="table align-items-center mb-0 mt-0 p-3" id="student_table">
+              <table class="table align-items-center mb-0 mt-0" id="student_table">
                 <thead>
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Student</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Contact</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Guardian</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Year Level / Section</th>
@@ -40,21 +39,17 @@
                             <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                             </div>
                             <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ student.firstname }} {{ student.lastname }} ( Male, 22 )</h6>
-                            <p class="text-sm text-secondary mb-0">{{ student.id }}</p>
+                            <h6 class="mb-0 text-sm"><a href="{% url 'instructor_student_profile' student.student_id %}">{{ student.firstname }} {{ student.lastname }}</a> ( Male, 22 )</h6>
+                            <p class="text-sm text-secondary mb-0">{{ student.student_id }}</p>
                             </div>
                         </div>
-                        </td>
-                        <td>
-                        <p class="text-sm font-weight-bold mb-0">09456656707</p>
-                        <p class="text-sm text-secondary mb-0">john.michael@email.com</p>
                         </td>
                         <td class="align-middle text-center text-sm">
                             
                         {% for guard in student.guardians.all %}
                             <p class="text-sm font-weight-bold mb-0">{{ guard.user.first_name }} {{ guard.user.last_name}}</p>
                             
-                            <p class="text-sm text-secondary mb-0">( {{ guard.id }} )</p>
+                            <p class="text-sm text-secondary mb-0">( {{ guard.relationship }} )</p>
                         {% empty  %}
 
                         <p class="text-sm text-secondary mb-0">No guardian assigned</p>
@@ -85,6 +80,69 @@
         </div>
  
     </div>
+
+    <div class="col-12 col-xl-3 mt-xl-0 mt-4">
+        <div class="card h-100">
+           <div class="card-header pb-0 p-3">
+              <h6 class="mb-0">Conversations</h6>
+           </div>
+           <div class="card-body p-3">
+              <ul class="list-group">
+                 <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2">
+                    <div class="avatar me-3">
+                       <img src="../../../assets/img/kal-visuals-square.jpg" alt="kal" class="border-radius-lg shadow">
+                    </div>
+                    <div class="d-flex align-items-start flex-column justify-content-center">
+                       <h6 class="mb-0 text-sm">Sophie B.</h6>
+                       <p class="mb-0 text-xs">Hi! I need more information..</p>
+                    </div>
+                    <a class="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="javascript:;">Reply</a>
+                 </li>
+                 <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2">
+                    <div class="avatar me-3">
+                       <img src="../../../assets/img/marie.jpg" alt="kal" class="border-radius-lg shadow">
+                    </div>
+                    <div class="d-flex align-items-start flex-column justify-content-center">
+                       <h6 class="mb-0 text-sm">Anne Marie</h6>
+                       <p class="mb-0 text-xs">Awesome work, can you..</p>
+                    </div>
+                    <a class="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="javascript:;">Reply</a>
+                 </li>
+                 <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2">
+                    <div class="avatar me-3">
+                       <img src="../../../assets/img/ivana-square.jpg" alt="kal" class="border-radius-lg shadow">
+                    </div>
+                    <div class="d-flex align-items-start flex-column justify-content-center">
+                       <h6 class="mb-0 text-sm">Ivanna</h6>
+                       <p class="mb-0 text-xs">About files I can..</p>
+                    </div>
+                    <a class="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="javascript:;">Reply</a>
+                 </li>
+                 <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2">
+                    <div class="avatar me-3">
+                       <img src="../../../assets/img/team-4.jpg" alt="kal" class="border-radius-lg shadow">
+                    </div>
+                    <div class="d-flex align-items-start flex-column justify-content-center">
+                       <h6 class="mb-0 text-sm">Peterson</h6>
+                       <p class="mb-0 text-xs">Have a great afternoon..</p>
+                    </div>
+                    <a class="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="javascript:;">Reply</a>
+                 </li>
+                 <li class="list-group-item border-0 d-flex align-items-center px-0">
+                    <div class="avatar me-3">
+                       <img src="../../../assets/img/team-3.jpg" alt="kal" class="border-radius-lg shadow">
+                    </div>
+                    <div class="d-flex align-items-start flex-column justify-content-center">
+                       <h6 class="mb-0 text-sm">Nick Daniel</h6>
+                       <p class="mb-0 text-xs">Hi! I need more information..</p>
+                    </div>
+                    <a class="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="javascript:;">Reply</a>
+                 </li>
+              </ul>
+           </div>
+        </div>
+    </div>
+
 
 </div>
 

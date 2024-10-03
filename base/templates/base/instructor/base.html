@@ -39,7 +39,13 @@
 
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css">
 
-  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+  <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+
+  <script src="https://unpkg.com/htmx.org@2.0.2/dist/htmx.js" integrity="sha384-yZq+5izaUBKcRgFbxgkRYwpHhHHCpp5nseXp0MEQ1A4MTWVMnqkmcuFez8x5qfxr" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+  
+
+  
 
   {% block stylesheet %}
 
@@ -50,6 +56,7 @@
 <body class="g-sidenav-show  bg-gray-200">
 
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-success" id="sidenav-main">
+
         <div class="sidenav-header">
           <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
           <a class="navbar-brand m-0" href="{% url 'instructor_home' %}">
@@ -92,7 +99,7 @@
                                 </a>
                             </li>
 
-                        <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionRental" style="">
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionRental" style="">
                             {% for section in year_level_sections %}
 
                               {% for subj in section.subjects.all %}
@@ -119,15 +126,47 @@
                     </div>
                 </div>
 
-                <hr class="horizontal light mt-0 mb-2">
-                <li class="nav-item">
-                    <a class="nav-link text-white {% if request.path == '/instructor/inbox/' %} bg-gradient-success active {% endif %}" href="{% url 'inbox_page' %}">
-                      <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-message"></i>
+                <div class="accordion">
+                  <div class="accordion-item ">
+                          <li class="nav-item">
+                              <a type="button" class=" collapsed nav-link text-white" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                  <i class="fa fa-message opacity-10"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Messages</span>
+                                
+                                
+                              </a>
+                          </li>
+
+                      <div id="collapseTwo" class="accordion-collapse collapse show " aria-labelledby="headingOne" data-bs-parent="#accordionRental" style="">
+
+                          {% for info in groups_info %}
+
+                              {% for member in info.other_members %}
+                                <li class="nav-item ms-1">
+                                  {% url 'subject_details' subj.slug as subject_url %}
+                                  <a class="nav-link text-white" href="{% url 'chatroom' info.group.group_name %}">
+                              
+                                        <span>
+                                          
+                                              {% for member in info.other_members %}
+
+                                            <p class="text-sm font-weight-bold mb-0">{{ member.first_name }} {{ member.last_name }}</p>
+                                            {% endfor %}
+                                            <p class="text-sm text-white mb-0">{{ info.last_message }}</p>
+                                        </span>
+                                    </a>
+                                  
+                                </li>
+                            {% endfor %}
+
+                          {% endfor %}
+                       
                       </div>
-                      <span class="nav-link-text ms-1">Inbox</span>
-                    </a>
-                </li>
+                  </div>
+              </div>
+
                 
 
                 <li class="nav-item mt-3">
@@ -191,11 +230,14 @@
             <div class="ms-md-auto pe-md-3 d-flex align-items-center">
        
             </div>
+
+          
+
             <ul class="navbar-nav  justify-content-end">
-    
+
+
     
               <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-                <span class="d-sm-inline mx-3">{{ request.user }}</span>
                 <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                   
                   <div class="sidenav-toggler-inner">
@@ -211,7 +253,17 @@
                 <a href="" class="nav-link text-body font-weight-bold px-0">
                   <span class="d-sm-inline d-none ms-3 text-uppercase">{{ request.user }}</span>
                 </a>
+                
               </li>
+              <li class="nav-item text-end d-lg-none ps-3">
+                <a type="button" class=" text-body p-0" id="sidebar-toggler">
+
+                    <i class="fa fa-message"></i>
+                    inbox
+                
+                </a>
+              </li>
+
             </ul>
           </div>
         </div>

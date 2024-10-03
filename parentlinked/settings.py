@@ -25,14 +25,16 @@ SECRET_KEY = 'django-insecure-a$u8(i$b*v!tn(+ces)w-#@dqn1%!&v2!e*67cv6+6adkel!+3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
 
+    'daphne',
     'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +44,9 @@ INSTALLED_APPS = [
 
     'authentication.apps.AuthenticationConfig',
     'base.apps.BaseConfig',
+    'chat.apps.ChatConfig',
+    
+    'django_htmx',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'parentlinked.urls'
@@ -74,7 +81,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'parentlinked.wsgi.application'
+ASGI_APPLICATION = 'parentlinked.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+
+    },
+}
+
 
 
 # Database

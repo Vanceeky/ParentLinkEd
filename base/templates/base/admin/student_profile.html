@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+
+{% block title %} Student | {{ student.firstname }} {{ student.lastname }} {% endblock %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="card shadow-lg mx-4 card-profile-bottom">
+    <div class="card-body p-3">
+       <div class="row gx-4">
+          <div class="col-auto">
+             <div class="avatar avatar-xl position-relative">
+                <img src="{{ student.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+             </div>
+          </div>
+          <div class="col-auto my-auto">
+             <div class="h-100">
+                <h5 class="mb-1 text-uppercase">
+                   {{ student.firstname }} {{ student.lastname}}
+                </h5>
+                <p class="mb-0 font-weight-bold text-sm">
+                    {{student.year_level_section }} ( Student)
+                </p>
+             </div>
+          </div>
+            <!--
+          <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
+             <div class="nav-wrapper position-relative end-0">
+                <ul class="nav nav-pills nav-fill p-1" role="tablist">
+                   <li class="nav-item" role="presentation">
+                      <a class="nav-link mb-0 px-0 py-1 active d-flex align-items-center justify-content-center " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="true">
+                      <i class="ni ni-app"></i>
+                      <span class="ms-2">App</span>
+                      </a>
+                   </li>
+                   <li class="nav-item" role="presentation">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false" tabindex="-1">
+                      <i class="ni ni-email-83"></i>
+                      <span class="ms-2">Messages</span>
+                      </a>
+                   </li>
+                   <li class="nav-item" role="presentation">
+                      <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false" tabindex="-1">
+                      <i class="ni ni-settings-gear-65"></i>
+                      <span class="ms-2">Settings</span>
+                      </a>
+                   </li>
+                   <div class="moving-tab position-absolute nav-link" style="padding: 0px; transition: 0.5s; transform: translate3d(0px, 0px, 0px); width: 88px;"><a class="nav-link mb-0 px-0 py-1 active d-flex align-items-center justify-content-center " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="true">-</a></div>
+                </ul>
+             </div>
+          </div>
+            -->
+       </div>
+    </div>
+</div>
+
+
+<div class="container-fluid py-4">
+    <div class="row mt-3">
+        <div class="col-12 col-xl-3 mt-xl-0 mt-4" >
+            <div class="card h-auto">
+               <div class="card-header pb-0 p-3">
+                  <h6 class="mb-0">Attendance</h6>
+               </div>
+               <div class="card-body overflow-auto">
+                  <div class="table-responsive">
+                    <table class="table align-items-center mb-0">
+                      <thead>
+                        <tr>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                          <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+  
+                        </tr>
+                      </thead>
+                      <tbody>
+  
+                        <tr>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0">Science</p>
+                            <p class="text-xs text-secondary mb-0">Grade 1 - Apple</p>
+                          </td>
+  
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                          </td>
+                          <td class="align-middle text-center text-sm">
+                              <span class="badge bg-gradient-success">Present</span>
+                            </td>
+  
+                        </tr>
+  
+                        <tr>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0">Science</p>
+                            <p class="text-xs text-secondary mb-0">Grade 1 - Apple</p>
+                          </td>
+  
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                          </td>
+                          <td class="align-middle text-center text-sm">
+                              <span class="badge bg-gradient-success">Present</span>
+                            </td>
+  
+                      </tr>
+  
+                      <tr>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0">Science</p>
+                            <p class="text-xs text-secondary mb-0">Grade 1 - Apple</p>
+                          </td>
+  
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
+                          </td>
+                          <td class="align-middle text-center text-sm">
+                              <span class="badge bg-gradient-success">Present</span>
+                            </td>
+  
+                      </tr>
+                
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+            </div>
+         </div>
+  
+          <div class="col-12 col-xl-6 mt-xl-0 mt-4" >
+              <div class="card h-auto">
+              <div class="card-header pb-0 p-3">
+                  <h6 class="mb-0">Report Card</h6>
+              </div>
+              <div class="card-body overflow-auto">
+                  <div class="table-responsive">
+                      <table class="table align-items-center mb-0">
+                      <thead>
+                          <tr>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                          <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">1st Quarter</th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">2nd Quarter</th>
+                          <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">3rd Quarter</th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">4th Quarter </th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GWA </th>
+                          </tr>
+                      </thead>
+                      <tbody>
+  
+                          <tr>
+                              <td>
+                                  <p class="text-md font-weight-bold mb-0">Science</p>
+                                  <p class="text-sm text-secondary mb-0">Grade 1 - Apple</p>
+                                </td>
+        
+  
+                              <td class="align-middle text-center">
+                                  <span class="btn bg-gradient-success text-md p-2">33</span>
+                              </td>
+                              <td class="align-middle text-center">
+                                  <span class="btn bg-gradient-success text-md p-2">33</span>
+                              </td>
+                              <td class="align-middle text-center">
+                                  <span class="btn bg-gradient-success text-md p-2">33</span>
+                              </td>
+  
+                              <td class="align-middle text-center">
+                                  <span class="btn bg-gradient-success text-md p-2">33</span>
+                                  
+                              </td>
+  
+                              <td class="align-middle text-center">
+                                  <span class="btn bg-gradient-success text-md p-2">33</span>
+                                  
+                              </td>
+                          </tr>
+                          <tr>
+                            <td>
+                                <p class="text-md font-weight-bold mb-0">Science</p>
+                                <p class="text-sm text-secondary mb-0">Grade 1 - Apple</p>
+                              </td>
+      
+
+                            <td class="align-middle text-center">
+                                <span class="btn bg-gradient-success text-md p-2">33</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="btn bg-gradient-success text-md p-2">33</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="btn bg-gradient-success text-md p-2">33</span>
+                            </td>
+
+                            <td class="align-middle text-center">
+                                <span class="btn bg-gradient-success text-md p-2">33</span>
+                                
+                            </td>
+
+                            <td class="align-middle text-center">
+                                <span class="btn bg-gradient-success text-md p-2">33</span>
+                                
+                            </td>
+                        </tr>  
+                        
+                  
+                      </tbody>
+                      </table>
+                  </div>
+                  </div>
+              </div>
+          </div>
+        {% for g in guardians %}
+        <div class="col-12 col-md-6 col-xl-3 mt-md-0 mt-4">
+            <div class="card h-auto">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="">Guardian Information: </h6>
+                        <button class="btn btn-sm  btn-outline-info"><i class="fa fa-message" style="font-size: 12px;"></i> Chat Now</button>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        <div class="row gx-4">
+                            <div class="col-auto">
+                            <div class="avatar avatar-xl position-relative">
+                                <img src="{{ g.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                            </div>
+                            </div>
+                            <div class="col-auto my-auto">
+                            <div class="h-100">
+                                <h6 class="mb-1 text-uppercase">
+                                    {{ g.user.first_name }} {{ g.user.last_name}}
+                                </h6>
+                                <p class="mb-0 font-weight-bold text-sm">
+                                    ( {{ g.relationship}})
+                                </p>
+                            </div>
+                            </div>
+                        </div>
+                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mobile:</strong> &nbsp; {{ g.contact_number}}</li>
+                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ g.user.email }}</li>
+                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address:</strong> &nbsp; {{ g.address }}</li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+
+        <div class="col-12 col-md-6 col-xl-3 mt-md-0 mt-4">
+            <div class="alert alert-secondary text-white text-center" role="alert">
+                <strong></strong> No guardian assigned
+            </div>
+        </div>
+
+       {% endfor %}
+
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+
+</div>
+
+
+{% endblock %}
+
+
+{% block js %}
+
+
+
+
+{% endblock %}

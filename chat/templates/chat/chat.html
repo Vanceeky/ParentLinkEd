@@ -1,0 +1,227 @@
+{% extends 'base/instructor/base.html' %}
+
+{% block title %} Inbox {% endblock %}
+
+{% block stylesheet %}
+<style>
+    /* Basic styling for the chat container */
+    #chat_messages {
+        max-height: 60vh; 
+        overflow-y: auto; 
+        overflow-x: hidden; 
+        scrollbar-width: thin; 
+        scrollbar-color: #888 #f1f1f1; 
+    }
+    
+
+    #chat_messages::-webkit-scrollbar {
+        width: 8px; /* Width of the scrollbar */
+    }
+    
+    #chat_messages::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+    
+    #chat_messages::-webkit-scrollbar-thumb {
+        background: #888; 
+        border-radius: 10px;
+    }
+    
+    #chat_messages::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+
+    @media (max-width: 768px) {
+        .pt-3.pb-4 .container {
+          max-width: 100%;
+          padding: 0;
+        }
+      }
+
+      .member.active {
+        background-color: #f0f0f0;
+        border-left: 4px solid #007bff; 
+    }
+
+    #sidenav-main {
+        width: 250px !important; /* Example width */
+    }
+    
+    @media (min-width: 992px) {
+        #sidenav-main {
+            width: 300px; /* Width for larger screens */
+        }
+    }
+
+    /* Sidebar styles */
+    .sidebar_ {
+        width: 320px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1050; /* Ensures it sits above other content */
+        background-color: white;
+        transition: transform 0.3s ease;
+        transform: translateX(-150%); /* Hidden by default */
+    }
+
+    /* Show sidebar on larger screens */
+    @media (min-width: 992px) {
+        .sidebar_ {
+            transform: translateX(0); /* Visible on large screens */
+        }
+    }
+
+
+
+
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid py-4 h-100" style="height: 100vh;">
+
+    <div class="row h-100">
+
+
+        <!-- Main Chat Window -->
+        <div class="col-12 col-md-6">
+            <div class="card blur shadow-blur max-height-vh-100">
+                
+                <div class="card-header shadow-lg">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-3">
+                                    <h6 class="mb-0 d-block chat-header-name text-capitalize">
+                                        {% if other_user %}
+                                        {{ other_user.first_name }} {{ other_user.last_name }}
+                                        {% endif %}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body h-100 overflow-auto overflow-x-hidden" id="chat_messages">
+                    {% for message in chat_messages reversed %}
+                    {% include 'chat/chat_message.html' %}
+                    {% endfor %}
+                </div>
+
+                <div class="card-footer d-block">
+                    <form class="align-items-center" method="POST" 
+                        hx-ext="ws"
+                        ws-connect="/ws/chatroom/{{ chatroom_name }}/"
+                        ws-send
+                        _="on htmx:wsAfterSend reset() me"
+                    >
+                        {% csrf_token %}
+                        <div class="d-flex">
+                            <div class="input-group">
+                                <div class="input-group input-group-outline my-3">
+                                    <label class="form-label">Type here....</label>
+                                    <input type="text" name="message" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)">
+                                    <button type="submit" class="btn bg-gradient-primary mb-0 ms-2">
+                                        <i class="ni ni-send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="sidebar_ card blur shadow-blur d-xl-none max-height-vh-75 overflow-auto overflow-x-hidden mb-5 mb-lg-0" id="sidebar">
+    <div class="card-header p-3">
+        <h6>Messages</h6>
+    </div>
+    
+    <div class="card-body p-2 chat-groups">
+        {% for info in groups_info %}
+            <div class="group">
+                {% for member in info.other_members %}
+                    <a href="{% url 'chatroom' info.group.group_name %}" 
+                    class="d-flex p-2 member" 
+                    data-group-id="{{ info.group.id }}" 
+                    data-group-name="{{ info.group.group_name }}">
+                        <img alt="Image" src="/static/images/default_avatar.png" class="avatar shadow">
+                        <div class="ms-3">
+                            {% for member in info.other_members %}
+                            <h6 class="mb-0 text-capitalize">{{ member.first_name }} {{ member.last_name }}</h6>
+                            {% endfor %}
+                            <p class="text-xs mb-2 text-muted">{{ info.last_message }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% empty %}
+            <li>No private chat found.</li>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block js %}
+
+<script>
+    function scrollToBottom() {
+        const container = document.getElementById('chat_messages')
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    scrollToBottom()
+    
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the current group name from the URL
+        var currentUrl = window.location.pathname;
+        var currentGroupName = currentUrl.split('/').filter(Boolean).pop(); // Get the last part of the URL
+
+        // Find all members (group links)
+        document.querySelectorAll('.member').forEach(function(memberElement) {
+            var groupName = memberElement.getAttribute('data-group-name');
+            
+            // Check if the group name matches the one in the URL
+            if (groupName === currentGroupName) {
+                memberElement.classList.add('active');
+            }
+        });
+    });
+</script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var sidebar = document.getElementById('sidebar');
+        var sidebarToggler = document.getElementById('sidebar-toggler');
+    
+        // Toggle sidebar visibility
+        sidebarToggler.addEventListener('click', function () {
+            if (sidebar.style.transform === 'translateX(0%)') {
+                sidebar.style.transform = 'translateX(-100%)'; // Close
+            } else {
+                sidebar.style.transform = 'translateX(0%)'; // Open
+            }
+        });
+    });
+    
+</script>
+
+{% endblock %}

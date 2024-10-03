@@ -28,6 +28,7 @@ urlpatterns = [
 
 
     path('students/', views.student_page, name='student_page'),
+    path('student/profile/<student_id>/', views.student_profile, name='student_profile'),
 
     path('section/<slug:section_slug>/', views.section_detail, name='section_detail'),
 
@@ -42,6 +43,8 @@ urlpatterns = [
     path('instructor/teaching-subject/<slug:slug>/', subject_details, name="subject_details"),
     path('instructor/inbox/', inbox_page, name="inbox_page"),
     path('instructor/students/', instructor_students_list, name="instructor_students_list"),
+    path('add-new-reminder/', add_new_reminder, name="add_new_reminder"),
+    path('instructor/student/profile/<student_id>/', student_profile, name='instructor_student_profile'),
     
     
     # other URL patterns

@@ -1,0 +1,116 @@
+{% extends 'base/instructor/base.html' %}
+
+{% block title %} Inbox {% endblock %}
+
+{% block stylesheet %}
+<style>
+    /* Basic styling for the chat container */
+    #chat_messages {
+        max-height: 400px; /* Adjust height as needed */
+        overflow-y: auto; /* Enable vertical scrolling */
+        overflow-x: hidden; /* Disable horizontal scrolling */
+        scrollbar-width: thin; /* For Firefox */
+        scrollbar-color: #888 #f1f1f1; /* For Firefox */
+    }
+    
+    /* For WebKit browsers (Chrome, Safari) */
+    #chat_messages::-webkit-scrollbar {
+        width: 8px; /* Width of the scrollbar */
+    }
+    
+    #chat_messages::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Background of the scrollbar track */
+    }
+    
+    #chat_messages::-webkit-scrollbar-thumb {
+        background: #888; /* Color of the scrollbar thumb */
+        border-radius: 10px; /* Rounded corners for the thumb */
+    }
+    
+    #chat_messages::-webkit-scrollbar-thumb:hover {
+        background: #555; /* Color of the thumb on hover */
+    }
+
+    @media (max-width: 768px) {
+        .pt-3.pb-4 .container {
+          max-width: 100%;
+          padding: 0;
+        }
+      }
+
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid py-4 h-100"  style="height: 100vh;">
+
+    <div class="row">
+       <div class="col-4">
+          <div class="card blur shadow-blur max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
+             <div class="card-header p-3">
+                <h6>Messages</h6>
+             </div>
+            <div class="card-body p-2 chat-groups">
+                {% for info in groups_info %}
+                    <div class="group">
+                        {% for member in info.other_members %}
+                            <a href="{% url 'chatroom' info.group.group_name%}" 
+                
+                            class="d-flex p-2 member" 
+                            data-group-id="{{ info.group.id }}" 
+                            data-group-name="{{ info.group.group_name }}">
+                                <img alt="Image" src="/static/images/default_avatar.png" class="avatar shadow">
+                                <div class="ms-3">
+                                    {% for member in info.other_members %}
+                                    <h6 class="mb-0 text-capitalize">{{ member.first_name }} {{ member.last_name }}</h6>
+                                    {% endfor %}
+                                    <p class="text-muted text-xs mb-2">{{ info.last_message }}</p>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% empty %}
+                    <li>No private chat found.</li>
+                {% endfor %}
+            </div>
+
+            
+          </div>
+       </div>
+       <div class="col-8">
+          <div class="card blur shadow-blur max-height-vh-70" id="chat_container">
+             <div class="card-header shadow-lg">
+                <div class="row">
+                   <div class="col-md-10">
+                      <div class="d-flex align-items-center">
+                         <div class="ms-3">
+                            Start Conversation
+                         </div>
+                      </div>
+                   </div>
+
+
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+
+
+
+
+
+{% endblock %}

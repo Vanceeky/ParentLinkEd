@@ -204,6 +204,21 @@ def student_page(request):
     
     return render(request, 'base/admin/students.html', context)
 
+
+def student_profile(request, student_id):
+    student = get_object_or_404(Student, student_id=student_id)
+    guardians = student.guardians.all()  # Get the related guardians
+
+    context = {
+        'student': student,
+        'guardians': guardians
+    }
+    return render(request, 'base/admin/student_profile.html', context)
+
+
+
+
+
 @login_required
 def section_detail(request, section_slug):
     # Fetch the YearLevelSection object based on the slug

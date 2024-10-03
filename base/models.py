@@ -85,6 +85,7 @@ class Student(models.Model):
     
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
+    student_id = models.CharField(max_length=100, null = True, blank = True)
     avatar = models.ImageField(upload_to='avatars/', default = '/default_avatar.png', null = True, blank = True)
 
     gender = models.CharField(max_length=10, null = True, blank = True)
@@ -108,6 +109,9 @@ class Guardian(models.Model):
     contact_number = models.CharField(max_length=11, null = True, blank = True)
     gender = models.CharField(max_length=10, null = True, blank = True)
 
+    avatar = models.ImageField(upload_to='avatars/', default = '/default_avatar.png', null = True, blank = True)
+    relationship = models.CharField(max_length=100, null = True, blank = True)
+
 
     
     date_created = models.DateTimeField(auto_now_add=True, null = True, blank = True)
@@ -118,3 +122,20 @@ class Guardian(models.Model):
 
 
 
+
+
+class Reminder(models.Model):
+
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
+
+    is_completed = models.BooleanField(default=False)
+
+    title = models.CharField(max_length=100)
+    description= models.TextField(blank=True, null=True)
+    date = models.DateTimeField(null=True, blank=True)
+
+    date_created = models.DateTimeField(auto_now_add=True, null = True, blank = True)
+
+
+    def __str__(self):
+        return f"Reminder: { self.instructor.user.username} - {self.title} - {self.date_created}"
