@@ -45,6 +45,9 @@ urlpatterns = [
     path('instructor/students/', instructor_students_list, name="instructor_students_list"),
     path('add-new-reminder/', add_new_reminder, name="add_new_reminder"),
     path('instructor/student/profile/<student_id>/', student_profile, name='instructor_student_profile'),
+
+    path('instructor/create-announcement/', create_announcement, name="create_announcement"),
+    path('instructor/record-attendance/', record_attendance, name="record_attendance"),
     
     
     # other URL patterns

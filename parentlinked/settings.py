@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 
     'daphne',
     'jazzmin',
+    'ckeditor',
 
     'django.contrib.admin',
     'django.contrib.auth',

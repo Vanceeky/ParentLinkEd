@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -139,3 +140,46 @@ class Reminder(models.Model):
 
     def __str__(self):
         return f"Reminder: { self.instructor.user.username} - {self.title} - {self.date_created}"
+
+
+
+class Announcement(models.Model):
+
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null = True, blank = True)
+    content = RichTextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Announcement can be for all students or selected students
+    all_students = models.BooleanField(default=False)
+
+    selected_students = models.ManyToManyField('Student', blank=True, related_name='announcements')
+
+
+    instructor = models.ForeignKey('Instructor', on_delete=models.CASCADE, related_name='announcements')
+
+
+
+    def __str__(self):
+        return f"{self.subject} - {self.created_at}"
+
+    def get_recipients(self):
+        """
+        Return a queryset of the students who should receive this announcement.
+        If `all_students` is True, return all students, otherwise return the selected students.
+        """
+
+        if self.all_students:
+            return Student.objects.all()
+        return self.selected_students.all()
+    
+class Attendance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='attendances')
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='attendances')
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=[('present', 'Present'), ('absent', 'Absent')])
+
+    class Meta:
+        unique_together = ('student', 'subject', 'date')  # Ensure no duplicate records for the same day
+
+    def __str__(self):
+        return f"{self.student} - {self.subject} - {self.date} - {self.status}"

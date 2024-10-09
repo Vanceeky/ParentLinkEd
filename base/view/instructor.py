@@ -1,9 +1,9 @@
 
 
-from base.models import Instructor, Subject, YearLevelSection, Student, User, Reminder
-from django.shortcuts import render, get_object_or_404
+from base.models import Instructor, Subject, YearLevelSection, Student, User, Reminder, Announcement, Attendance
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import datetime
 from chat.models import ChatGroup
 
@@ -76,9 +76,17 @@ def subject_details(request, slug):
         students = section.student_set.all()  # Get all students in this section
         sections_with_students.append((section, students))
 
+
+    announcements = Announcement.objects.filter(subject=subject)
+
+    attendance = Attendance.objects.filter(subject=subject)
+
+
     context = {
         'subject': subject,
-        'sections_with_students': sections_with_students,  # Pass the list of tuples to the context
+        'sections_with_students': sections_with_students,
+        'announcements': announcements,
+        'attendance': attendance
     }
 
 
@@ -134,13 +142,71 @@ def add_new_reminder(request):
 def student_profile(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
     guardians = student.guardians.all()  # Get the related guardians
+    attendance = Attendance.objects.filter(student=student)
+  
 
     context = {
         'student': student,
-        'guardians': guardians
+        'guardians': guardians,
+        'attendance': attendance
     }
 
     return render(request, 'base/instructor/student_profile.html', context)
 
 
 
+def create_announcement(request):
+    if request.method == "POST":
+        subject_id = request.POST.get('subject_id')
+        content = request.POST.get('content')
+        all_students = request.POST.get('all_students') == 'on'  # Checkbox
+        selected_students_ids = request.POST.get('selected_students', '').split(',')
+
+        subject = get_object_or_404(Subject, id=subject_id)
+
+        # Check if content is empty
+        if not content.strip():  # Use strip() to check for whitespace
+            return JsonResponse({'status': 'error', 'message': 'Announcement cannot be empty.'})
+
+        # Create the announcement
+        announcement = Announcement.objects.create(
+            subject=subject,
+            content=content,
+            all_students=all_students,
+            instructor=request.user.instructor  # Assuming user is authenticated and has an instructor profile
+        )
+
+        # Link selected students
+        if not all_students:
+            for student_id in selected_students_ids:
+                if student_id:
+                    student = Student.objects.get(id=student_id)
+                    announcement.selected_students.add(student)
+
+        announcement.save()
+
+        return JsonResponse({'status': 'success', 'message': 'Announcement created successfully!'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+
+def record_attendance(request):
+    if request.method == 'POST':
+        subject_id = request.POST.get('subject_id')  # Assuming you send the subject ID from the modal
+        subject = Subject.objects.get(id=subject_id)
+
+        # Loop through the posted attendance data
+        for student_id in request.POST:
+            if student_id.startswith('student_id_'):
+                student_id = student_id.split('_')[2]
+                attendance_status = request.POST.get(f'attendance_{student_id}')
+
+                # Create or update attendance record
+                Attendance.objects.update_or_create(
+                    student_id=student_id,
+                    subject=subject,
+                    defaults={'status': attendance_status}
+                )
+
+        return JsonResponse({'success': True})  # Return success response
+    return JsonResponse({'success': False}, status=400)  # Return error response
