@@ -10,6 +10,10 @@ from base.view.instructor import *
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('feed/', views.feed, name='feed'),
+    path('add-feed/', views.add_feed, name='add_feed'),
+
+    path('upcoming-events/', views.upcoming_events, name='upcoming_events'),
 
 
     path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
@@ -48,6 +52,7 @@ urlpatterns = [
 
     path('instructor/create-announcement/', create_announcement, name="create_announcement"),
     path('instructor/record-attendance/', record_attendance, name="record_attendance"),
+    path('add-grade/', add_grade, name='add_grade'),
     
     
     # other URL patterns

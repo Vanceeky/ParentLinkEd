@@ -183,3 +183,61 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student} - {self.subject} - {self.date} - {self.status}"
+    
+
+
+class Feed(models.Model):
+    author = models.ForeignKey(Instructor, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Author: {self.author} - {self.title} - {self.created_at}"
+    
+class FeedImage(models.Model):
+    feed = models.ForeignKey(Feed, related_name="images", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='feed_images/')
+    
+    def __str__(self):
+        return f"Image for {self.feed.title}"
+    
+
+class Grade(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='grades')
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='grades')
+    school_year = models.CharField(max_length=9)  # e.g., "2023-2024"
+    
+    quarter_1 = models.FloatField(null=True, blank=True)
+    quarter_2 = models.FloatField(null=True, blank=True)
+    quarter_3 = models.FloatField(null=True, blank=True)
+    quarter_4 = models.FloatField(null=True, blank=True)
+    
+    final_grade = models.FloatField(null=True, blank=True)  # This will be calculated
+    remarks = models.CharField(max_length=10, choices=[('Passed', 'Passed'), ('Failed', 'Failed')], null=True, blank=True)
+
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student} - {self.subject} - Final Grade: {self.final_grade} ({self.remarks})"
+
+    def save(self, *args, **kwargs):
+        # Calculate the final grade and remarks before saving
+        self.calculate_final_grade()
+        super().save(*args, **kwargs)
+
+    def calculate_final_grade(self):
+        # Get the quarter grades
+        quarters = [self.quarter_1, self.quarter_2, self.quarter_3, self.quarter_4]
+
+        # Check if all quarters are provided (not None)
+        if all(q is not None for q in quarters):
+            # Calculate the final grade as the average of the four quarters
+            self.final_grade = sum(quarters) / len(quarters)
+
+            # Determine the remarks based on the final grade
+            self.remarks = 'Passed' if self.final_grade >= 74.9 else 'Failed'
+        else:
+            # If any quarter is None, set final_grade and remarks to None
+            self.final_grade = None
+            self.remarks = None

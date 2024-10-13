@@ -83,6 +83,7 @@
                     <div class="card-header pb-0 p-3">
                         <h6 class="mb-0">Attendance</h6>
                     </div>
+                    {% if attendance %}
                     <div class="card-body overflow-auto">
                         <div class="table-responsive">
                             <table class="table align-items-center mb-0">
@@ -113,18 +114,44 @@
                             </table>
                         </div>
                     </div>
+
+                    {% else %}
+
+                    <p class="p-2 text-center"> No data available </p>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Report Card Tab Pane -->
             <div class="tab-pane fade" id="report-card" role="tabpanel" aria-labelledby="report-card-tab">
                 <div class="card h-auto mt-3">
-                    <div class="card-header pb-0">
-                        <h6 class="mb-0">Report Card</h6>
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 d-flex align-items-center">Report Card
+                            <div class=" me-2">
+                                
+
+                                <div class="input-group input-group-static ms-3">
+                                    
+                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <option>2023-2024</option>
+
+                                    </select>
+                                </div>
+
+
+
+                            </div>
+                        </h6>
+
+
+
+                        
+                        <button class="btn btn-sm btn-outline-success me-3" data-bs-toggle="modal" data-bs-target="#record-grade-modal">Record Grade</button>
                     </div>
+                    
                     <div class="card-body overflow-auto">
                         <div class="table-responsive">
-                            <table class="table align-items-center mb-0">
+                            <table class="table align-items-center mb-0" id="remarks_table">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
@@ -133,22 +160,59 @@
                                         <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">3rd Quarter</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">4th Quarter</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GWA</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Remarks</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for subject in subjects %}
                                     <tr>
-                                        <td><p class="text-md font-weight-bold mb-0">Science</p></td>
-                                        <td class="align-middle text-center"><span class="btn bg-gradient-success text-md p-2">33</span></td>
-                                        <td class="align-middle text-center"><span class="btn bg-gradient-success text-md p-2">33</span></td>
-                                        <td class="align-middle text-center"><span class="btn bg-gradient-success text-md p-2">33</span></td>
-                                        <td class="align-middle text-center"><span class="btn bg-gradient-success text-md p-2">33</span></td>
-                                        <td class="align-middle text-center"><span class="btn bg-gradient-success text-md p-2">33</span></td>
+                                        <td><p class="text-md font-weight-bold mb-0">{{ subject.name }}</p></td>
+                                        
+                                
+                                            {% for g in grades %}
+                                                {% if g.subject.id == subject.id %}
+                                                    <td class="align-middle text-center">
+                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_1|default:0 }}</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_2|default:0 }}</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_3|default:0 }}</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_4|default:0 }}</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.final_grade|default:0 }}</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.remarks|default:"-" }}</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <a href="" type="button" data-bs-toggle="modal" data-bs-target="#update-grade-modal" class="text-success"> 
+                                                            <i class="fa fa-edit me-2"></i>Update
+                                                        </a>
+                                                    </td>
+                                              
+                                                {% endif %}
+                                            {% endfor %}
+
                                     </tr>
-                                    <!-- Repeat for other subjects -->
+                                {% endfor %}
+                                
+                                
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    
+                    
+                    
+                    
+
+
                 </div>
             </div>
         </div>
@@ -208,38 +272,39 @@
           </button>
         </div>
         <div class="modal-body">
-                      {% for g in guardians %}
-            <div class="border-bottom">
-                <div class=" p-3">
-                    <ul class="list-group">
-                        <div class="row gx-4">
-                            <div class="col-auto">
-                                <div class="avatar avatar-xl position-relative">
-                                    <img src="{{ g.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+
+            {% for g in guardians %}
+                <div class="border-bottom">
+                    <div class=" p-3">
+                        <ul class="list-group">
+                            <div class="row gx-4">
+                                <div class="col-auto">
+                                    <div class="avatar avatar-xl position-relative">
+                                        <img src="{{ g.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                                    </div>
+                                </div>
+                                <div class="col-auto my-auto">
+                                    <div class="h-100">
+                                        <h6 class="mb-1 text-uppercase">{{ g.user.first_name }} {{ g.user.last_name}}</h6>
+                                        <p class="mb-0 font-weight-bold text-sm">( {{ g.relationship}})</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-auto my-auto">
-                                <div class="h-100">
-                                    <h6 class="mb-1 text-uppercase">{{ g.user.first_name }} {{ g.user.last_name}}</h6>
-                                    <p class="mb-0 font-weight-bold text-sm">( {{ g.relationship}})</p>
-                                </div>
-                            </div>
-                        </div>
-                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mobile:</strong> &nbsp; {{ g.contact_number}}</li>
-                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ g.user.email }}</li>
-                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address:</strong> &nbsp; {{ g.address }}</li>
-                    </ul>
+                            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mobile:</strong> &nbsp; {{ g.contact_number}}</li>
+                            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ g.user.email }}</li>
+                            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address:</strong> &nbsp; {{ g.address }}</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-            <div class="modal-footer">
-                <a type="button" href="{% url 'start-chat' g.user %}" class="btn btn-outline-info"><i class="fa fa-message me-2" style="font-size: 12px;"></i>Chat now</a>
-            </div>
+                <div class="modal-footer">
+                    <a type="button" href="{% url 'start-chat' g.user %}" class="btn btn-outline-info"><i class="fa fa-message me-2" style="font-size: 12px;"></i>Chat now</a>
+                </div>
 
-            {% empty %}
-            <div class="alert alert-secondary text-white text-center" role="alert">
-                <strong></strong> No guardian assigned
-            </div>
+                {% empty %}
+                <div class="alert alert-secondary text-white text-center" role="alert">
+                    <strong></strong> No guardian assigned
+                </div>
             {% endfor %}
 
 
@@ -248,13 +313,157 @@
 
       </div>
     </div>
-  </div>
+</div>
+
+
+
+
+
+  <!-- Modal -->
+<div class="modal fade" id="record-grade-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Record Grade</h5>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="add-grade-form" action="{% url 'add_grade' %}" method="POST">
+          
+            <input type="hidden" name="student_id" value="{{ student.id }}">
+            <div class="modal-body">
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group input-group-static mb-4">
+                            <select class="form-control" id="" name="subject_id">
+                                <option value="">Select a subject</option>
+                                {% for subject in subjects_without_grades %}
+                                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                    </div>
+
+
+
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label text-xs">1st Quarter</label>
+                            <input type="text" name="1st" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label text-xs">2nd Quarter</label>
+                            <input type="text" name="2nd" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label text-xs">3rd Quarter</label>
+                            <input type="text" name="3rd" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label text-xs">4th Quarter</label>
+                            <input type="text" name="4th" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+            <button type="submit" class="btn bg-gradient-info">Save changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+  <!-- Modal -->
+<div class="modal fade" id="update-grade-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Update Grade</h5>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn bg-gradient-info">Save changes</button>
+        </div>
+      </div>
+    </div>
+</div>
 
 
 {% endblock %}
 
 
 {% block js %}
+<script>
+    document.getElementById('add-grade-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+    
+        const formData = new FormData(this);
+    
+        fetch(this.action, { // Use form's action attribute
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'  // Add CSRF token for security
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Log the data for debugging
+            if (data.success) {
+                // Show success alert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    confirmButtonText: 'Okay'
+                }).then(() => {
+                    // Reload the page after confirmation
+                    location.reload();
+                });
+            } else {
+                // Show error alert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: data.message,
+                    confirmButtonText: 'Okay'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error); // Log fetch errors for debugging
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while processing your request.',
+                confirmButtonText: 'Okay'
+            });
+        });
+    });
+    
+</script>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

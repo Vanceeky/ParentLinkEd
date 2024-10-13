@@ -19,7 +19,45 @@ def index(request):
     return render(request, 'base/index.html')
 
 
+def feed(request):
+    posts = Feed.objects.all()
+    context = {
+        'posts': posts
+    }
+    return render(request, 'base/feed.html', context)
 
+def add_feed(request):
+    try:
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            content = request.POST.get('description')
+            images = request.FILES.getlist('images')  # Get list of uploaded files
+            
+            # Create the feed object
+            feed = Feed(author=request.user.instructor, title=title, content=content)
+            feed.save()
+            
+            # Save associated images
+            for image in images:
+                FeedImage.objects.create(feed=feed, image=image)
+
+            # Prepare success response
+            response_data = {
+                'success': True,
+                'message': 'Feed created successfully!'
+            }
+        return JsonResponse(response_data)
+
+    except Exception as e:
+        # Prepare error response
+        response_data = {
+            'success': False,
+            'message': f'Error creating feed: {str(e)}'
+        }
+        return JsonResponse(response_data, status=400)
+    
+def upcoming_events(request):
+    return render(request, 'base/upcoming_events.html')
 
 
 @login_required
