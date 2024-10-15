@@ -1,4 +1,4 @@
-{% extends 'base/instructor/base.html' %}
+{% extends 'base/layout.html' %}
 
 {% block title %} Inbox {% endblock %}
 
@@ -110,9 +110,11 @@
                 </div>
                 
                 <div class="card-body h-100 overflow-auto overflow-x-hidden" id="chat_messages">
+                    
                     {% for message in chat_messages reversed %}
-                    {% include 'chat/chat_message.html' %}
+                        {% include 'chat/chat_message.html' %}
                     {% endfor %}
+
                 </div>
 
                 <div class="card-footer d-block">

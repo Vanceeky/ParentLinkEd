@@ -1,0 +1,335 @@
+{% extends 'base/layout.html' %}
+
+{% block title %} {{ student.firstname }} {{ student.lastname}} {% endblock %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5 mt-8">
+    <div class="container">
+
+        <div class="card shadow-lg mx-4 card-profile-bottom">
+            <div class="card-body p-3">
+                <div class="row gx-4 mb-2">
+                    <div class="col-auto">
+                       <div class="avatar avatar-xl position-relative">
+                          <img src="{{ student.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                       </div>
+                    </div>
+                    <div class="col-auto my-auto">
+                       <div class="h-100">
+                          <h5 class="mb-1">
+                            {{ student.firstname }} {{ student.lastname}}
+                          </h5>
+                          <p class="mb-0 font-weight-normal text-sm">
+                            {{student.year_level_section }} ( Student)
+                          </p>
+                       </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
+        
+                        <div class="nav-wrapper position-relative end-0">
+                            <ul class="nav nav-fill p-1 flex-row" role="tablist" id="customTabs">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link_ nav-link mb-0 px-0 py-1 text-info active fw-bold" id="attendance-tab" data-bs-toggle="tab" href="#attendance" role="tab" aria-controls="attendance" aria-selected="true">
+                                        <span class="ms-1">Attendance</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link_ nav-link mb-0 px-0 py-1  text-info fw-bold" id="report-card-tab" data-bs-toggle="tab" href="#report-card" role="tab" aria-controls="report-card" aria-selected="false">
+                                        <span class="ms-1">Report Card</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item d-block d-sm-none"> <!-- Show only on extra-small screens -->
+                                    <a class="nav-link mb-0 px-0 py-1 fw-bold text-info cursor-pointer" id="guardian-tab" data-bs-toggle="modal" data-bs-target="#modal-guardian">
+                                        <span class="ms-1">Adviser</span>
+                                    </a>
+                                </li>
+                                
+        
+                            </ul>
+                        
+        
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+        
+        <div class="tab-content container-fluid">
+            <div class="row">
+                <!-- Main content column -->
+                <div class="col-md-8">
+                    <!-- Attendance Tab Pane -->
+                    <div class="tab-pane fade show active" id="attendance" role="tabpanel" aria-labelledby="attendance-tab">
+                        <div class="card h-auto mt-3" style="max-height: 100vh; overflow: auto;">
+                            <div class="card-header pb-0 p-3">
+                                <h6 class="mb-0">Attendance</h6>
+                            </div>
+                            {% if attendance %}
+                            <div class="card-body overflow-auto">
+                                <div class="table-responsive">
+                                    <table class="table align-items-center mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                                                <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for a in attendance %}
+                                            <tr>
+                                                <td><p class="text-sm font-weight-bold mb-0 small">{{ a.subject.name }}</p></td>
+                                                <td class="align-middle text-center">
+                                                    <span class="text-secondary text-sm small font-weight-bold">{{ a.date|date:"l, F j, Y" }}</span>
+                                                </td>
+                                                <td class="align-middle text-center text-sm small">
+                                                    {% if a.status == 'present' %}
+                                                    <span class="badge badge-pill badge-md bg-gradient-success">{{a.status}}</span>
+                                                    {% else %}
+                                                    <span class="badge badge-pill badge-md bg-gradient-warning">{{a.status}}</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+        
+                            {% else %}
+        
+                            <p class="p-2 text-center"> No data available </p>
+
+                            {% endif %}
+                        </div>
+                    </div>
+        
+                    <!-- Report Card Tab Pane -->
+                    <div class="tab-pane fade" id="report-card" role="tabpanel" aria-labelledby="report-card-tab">
+                        <div class="card h-auto mt-3">
+                            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 d-flex align-items-center">Report Card</h6>
+
+                                <div>
+                                    <div class="input-group input-group-static ms-3">
+                                                
+                                        <select class="form-control" id="exampleFormControlSelect1">
+                                        <option>2023-2024</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+        
+        
+    
+                            </div>
+                            
+                            <div class="card-body overflow-auto">
+                                <div class="table-responsive">
+                                    <table class="table align-items-center mb-0" id="remarks_table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                                                <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">1st Quarter</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">2nd Quarter</th>
+                                                <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">3rd Quarter</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">4th Quarter</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GWA</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Remarks</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for subject in subjects %}
+                                            <tr>
+                                                <td><p class="text-md font-weight-bold mb-0">{{ subject.name }}</p></td>
+                                                
+                                        
+                                                    {% for g in grades %}
+                                                        {% if g.subject.id == subject.id %}
+                                                            <td class="align-middle text-center">
+                                                                <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_1|default:0 }}</span>
+                                                            </td>
+                                                            <td class="align-middle text-center">
+                                                                <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_2|default:0 }}</span>
+                                                            </td>
+                                                            <td class="align-middle text-center">
+                                                                <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_3|default:0 }}</span>
+                                                            </td>
+                                                            <td class="align-middle text-center">
+                                                                <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_4|default:0 }}</span>
+                                                            </td>
+                                                            <td class="align-middle text-center">
+                                                                <span class="btn bg-gradient-success text-md p-1">{{ g.final_grade|default:0 }}</span>
+                                                            </td>
+                                                            <td class="align-middle text-center">
+                                                                <span class="btn bg-gradient-success text-md p-1">{{ g.remarks|default:"-" }}</span>
+                                                            </td>
+     
+                                                      
+                                                        {% endif %}
+                                                    {% endfor %}
+        
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            
+        
+        
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Guardian column (col-md-4) -->
+                <div class="col-md-4 d-none d-md-block">
+              
+                    <div class="card h-auto mt-3">
+                        <div class="card-header pb-0 p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="">Adviser Information: </h6>
+                                <a href="{% url 'start-chat' yls.instructor.user%}" class="btn btn-sm btn-outline-info"><i class="fa fa-message" style="font-size: 12px;"></i> Chat Now</a>
+                            </div>
+                        </div>
+                        <div class="card-body p-3">
+                            <ul class="list-group">
+                                <div class="row gx-4">
+                                    <div class="col-auto">
+                                        <div class="avatar avatar-xl position-relative">
+                                            <img src="{{ yls.instructor.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                                        </div>
+                                    </div>
+                                    <div class="col-auto my-auto">
+                                        <div class="h-100">
+                                            <h6 class="mb-1 text-uppercase">{{ yls.instructor.user.first_name }} {{ yls.instructor.user.last_name}}</h6>
+                                            <p class="mb-0 font-weight-bold text-sm">( {{ yls.instructor.employee_id }} )</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mobile:</strong> &nbsp; {{ yls.instructor.contact_number}}</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ yls.instructor.user.email }}</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address:</strong> &nbsp; {{ yls.instructor.address }}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+        
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal-guardian" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Adviser Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+
+                <div class="border-bottom">
+                    <div class=" p-3">
+                        <ul class="list-group">
+                            <div class="row gx-4">
+                                <div class="col-auto">
+                                    <div class="avatar avatar-xl position-relative">
+                                        <img src="{{ yls.instructor.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                                    </div>
+                                </div>
+                                <div class="col-auto my-auto">
+                                    <div class="h-100">
+                                        <h6 class="mb-1 text-uppercase">{{ yls.instructor.user.first_name }} {{ yls.instructor.user.last_name}}</h6>
+                                        <p class="mb-0 font-weight-bold text-sm">({{ yls.instructor.employee_id }})</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mobile:</strong> &nbsp; {{ yls.instructor.contact_number}}</li>
+                            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ yls.instructor.user.email }}</li>
+                            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address:</strong> &nbsp; {{ yls.instructor.address }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a type="button" href="{% url 'start-chat' yls.instructor.user%}" class="btn btn-outline-info"><i class="fa fa-message me-2" style="font-size: 12px;"></i>Chat now</a>
+                </div>
+
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get tab buttons and content
+        const tabs = document.querySelectorAll('.nav-link_'); // Adjust this selector based on your tab buttons
+        const attendanceTab = document.getElementById('attendance');
+        const reportCardTab = document.getElementById('report-card');
+
+        // Show the attendance tab by default
+        attendanceTab.style.display = 'block';
+        reportCardTab.style.display = 'none';
+
+        // Function to handle tab change
+        function handleTabChange(event) {
+            // Prevent default anchor behavior
+            event.preventDefault();
+
+            // Check if the clicked tab is the Guardian tab
+            const targetHref = event.currentTarget.getAttribute('href');
+            if (targetHref === '#modal-guardian') {
+                // If it's the Guardian tab, do not change the attendance or report card visibility
+                return;
+            }
+
+            // Hide both tab panes
+            attendanceTab.style.display = 'none';
+            reportCardTab.style.display = 'none';
+
+            // Show the selected tab based on the clicked tab
+            if (targetHref === '#attendance') {
+                attendanceTab.style.display = 'block';
+            } else if (targetHref === '#report-card') {
+                reportCardTab.style.display = 'block';
+            }
+        }
+
+        // Add event listeners to each tab button
+        tabs.forEach(tab => {
+            tab.addEventListener('click', handleTabChange);
+        });
+    });
+</script>
+
+{% endblock %}

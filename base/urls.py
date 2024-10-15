@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 
 
 from base.view.instructor import *
+from base.view.guardian import *
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -54,6 +55,10 @@ urlpatterns = [
     path('instructor/record-attendance/', record_attendance, name="record_attendance"),
     path('add-grade/', add_grade, name='add_grade'),
     
+    # GUARDIAN URLS
+    path('guardian/home/', guardian_home, name="guardian_home"),
+    path('guardian/student/<student_id>/', guardian_student_profile, name="guardian_student_profile"),
+
     
     # other URL patterns
 ]
