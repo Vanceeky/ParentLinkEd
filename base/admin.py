@@ -13,6 +13,7 @@ admin.site.register(Reminder)
 admin.site.register(Announcement)
 admin.site.register(Attendance)
 admin.site.register(Grade)
+admin.site.register(Event)
 
 
 class FeedImageInline(admin.TabularInline):

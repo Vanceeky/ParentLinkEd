@@ -15,7 +15,8 @@ urlpatterns = [
     path('add-feed/', views.add_feed, name='add_feed'),
 
     path('upcoming-events/', views.upcoming_events, name='upcoming_events'),
-
+    path('update-event/<int:event_id>/', views.update_event, name='update_event'),
+    path('delete-event/<int:event_id>/', views.delete_event, name='delete_event'),
 
     path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
 
@@ -34,6 +35,8 @@ urlpatterns = [
 
     path('students/', views.student_page, name='student_page'),
     path('student/profile/<student_id>/', views.student_profile, name='student_profile'),
+
+    path('add-student/', views.add_student, name='add_student'),
 
     path('section/<slug:section_slug>/', views.section_detail, name='section_detail'),
 

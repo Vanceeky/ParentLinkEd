@@ -44,6 +44,11 @@
   <script src="https://unpkg.com/htmx.org@2.0.2/dist/htmx.js" integrity="sha384-yZq+5izaUBKcRgFbxgkRYwpHhHHCpp5nseXp0MEQ1A4MTWVMnqkmcuFez8x5qfxr" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
   
+<!-- FullCalendar CSS -->
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet" />
+
+
 
   <style>
 
@@ -102,7 +107,7 @@
                        </li>
 
                        <li class="nav-item mx-2">
-                        <a href="" role="button" class="nav-link ps-2 cursor-pointer"aria-expanded="false">
+                        <a href="{% url 'upcoming_events' %} " role="button" class="{% if request.path == '/upcoming-events/' %} active {% endif %} nav-link ps-2 cursor-pointer"aria-expanded="false">
                         Upcoming Events
 
                         </a>
@@ -137,7 +142,7 @@
                      
                         {% if request.user.is_authenticated %}
                         {% for group in request.user.groups.all %}
-                           {% if group.name == 'instructor' or group.name == 'registrar' %}
+                           {% if group.name == 'instructor'  %}
                   
                                  <li class="nav-item dropdown dropdown-hover mx-2 h-auto">
                                     <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuBlocks" data-bs-toggle="dropdown" aria-expanded="false">
@@ -187,8 +192,79 @@
                                       
                                     </div>
                                  </li>
+                        
+                           {% elif group.name == 'registrar' %}
+
+                      
+
+                           {% elif group.name == 'guardian' %}
+
+                              <li class="nav-item dropdown dropdown-hover mx-2 h-auto">
+                                 <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuBlocks" data-bs-toggle="dropdown" aria-expanded="false">
+                                 Account
+                                 <img src=" /static/assets/img/down-arrow-dark.svg " alt="down-arrow" class="arrow ms-1 d-lg-block d-none">
+                                 <img src="/static/assets/img/down-arrow-dark.svg" alt="down-arrow" class="arrow ms-1 d-lg-none d-block">
+                                 </a>
+                                 <div class="dropdown-menu dropdown-menu-animation dropdown-md dropdown-md-responsive border-radius-lg mt-0 mt-lg-3 dropdown-menu-end h-auto"  aria-labelledby="dropdownMenuBlocks">     
+                                    <div class="d-none d-lg-block">
+                                       <ul class="list-group">
+                                          <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                             <a class="dropdown-item border-radius-md  text-center" href="{% url 'inbox' %}">
+                                                <div class="d-flex justify-content-center align-items-center text-dark text-center">
+                                                   <i class="material-icons opacity-6 me-2 text-md">message</i>
+                                                   Inbox
+                                                </div>
+                                             </a>
+                                          </li>
+                                          <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                             <a class="dropdown-item border-radius-md  text-center" href="{% url 'guardian_home' %}">
+                                                <div class="d-flex justify-content-center align-items-center text-dark text-center">
+                                                   <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                                   Students
+                                                </div>
+                                             </a>
+                                          </li>
+                                          <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                             <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
+                                                <div class="d-flex justify-content-center  align-items-center text-danger">
+                                                   <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
+                                                   Sign out
+                                                </div>
+                                             </a>
+                                          </li>
+
+      
+                                       </ul>
+                                    </div>
+                                    <div class="row d-lg-none h-auto">
+                                       <div class="col-md-12">
+                                          <a class="dropdown-item border-radius-md text-center" href="">
+                                             <div class="d-flex align-items-center text-dark">
+                                                <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                                Add new event
+                                             </div>
+                                          </a>
+                                          <a class="dropdown-item border-radius-md text-center" href="">
+                                             <div class="d-flex align-items-center text-dark">
+                                                   <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                                   Dashboard
+                                             </div>
+                                          </a>
+                                          <a class="dropdown-item border-radius-md" href="">
+                                             <div class="d-flex  align-items-center text-danger">
+                                                   <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
+                                                   Sign out
+                                             </div>
+                                          </a>
+                                       </div>
+                                    </div>
+                                 
+                                 </div>
+                              </li>
 
                            {% endif %}
+
+
                            {% endfor %}
                            {% else %}
 

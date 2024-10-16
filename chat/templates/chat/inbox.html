@@ -1,4 +1,4 @@
-{% extends 'base/instructor/base.html' %}
+{% extends 'base/layout.html' %}
 
 {% block title %} Inbox {% endblock %}
 
@@ -46,61 +46,75 @@
 {% block content %}
 
 
-<div class="container-fluid py-4 h-100"  style="height: 100vh;">
+<section class="pt-3 pb-4 mt-8">
+    <div class="p-3 shadow-blur">
+        <div class="container">
 
-    <div class="row">
-       <div class="col-4">
-          <div class="card blur shadow-blur max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
-             <div class="card-header p-3">
-                <h6>Messages</h6>
-             </div>
-            <div class="card-body p-2 chat-groups">
-                {% for info in groups_info %}
-                    <div class="group">
-                        {% for member in info.other_members %}
-                            <a href="{% url 'chatroom' info.group.group_name%}" 
-                
-                            class="d-flex p-2 member" 
-                            data-group-id="{{ info.group.id }}" 
-                            data-group-name="{{ info.group.group_name }}">
-                                <img alt="Image" src="/static/images/default_avatar.png" class="avatar shadow">
-                                <div class="ms-3">
-                                    {% for member in info.other_members %}
-                                    <h6 class="mb-0 text-capitalize">{{ member.first_name }} {{ member.last_name }}</h6>
-                                    {% endfor %}
-                                    <p class="text-muted text-xs mb-2">{{ info.last_message }}</p>
-                                </div>
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% empty %}
-                    <li>No private chat found.</li>
-                {% endfor %}
-            </div>
-
-            
-          </div>
-       </div>
-       <div class="col-8">
-          <div class="card blur shadow-blur max-height-vh-70" id="chat_container">
-             <div class="card-header shadow-lg">
+          <div class="mx-4 mt-n6 overflow-hidden">
+            <div class="-fluid py-4">
                 <div class="row">
-                   <div class="col-md-10">
-                      <div class="d-flex align-items-center">
-                         <div class="ms-3">
-                            Start Conversation
+                   <div class="col-lg-4 col-md-5 col-12">
+                      <div class="card blur shadow-blur max-height-vh-70 overflow-auto overflow-x-hidden mb-5 mb-lg-0">
+                         <div class="card-header p-3">
+                            <h6>Inbox</h6>
                          </div>
+                             <div class="card-body p-2 chat-groups">
+                                {% for info in groups_info %}
+                                    <div class="group">
+                                        {% for member in info.other_members %}
+                                        <a href="{% url 'chatroom' info.group.group_name%}" 
+                                
+                                            class="d-flex p-2 member" 
+                                            data-group-id="{{ info.group.id }}" 
+                                            data-group-name="{{ info.group.group_name }}">
+                                                <img alt="Image" src="/static/images/default_avatar.png" class="avatar shadow">
+                                                <div class="ms-3">
+                                                    {% for member in info.other_members %}
+                                                    <h6 class="mb-0 text-capitalize">{{ member.first_name }} {{ member.last_name }}</h6>
+                                                    {% endfor %}
+                                                    <p class="text-muted text-xs mb-2">{{ info.last_message }}</p>
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                {% empty %}
+                                    <li>No private chat found.</li>
+                                {% endfor %}
+                            </div>
+                        
                       </div>
                    </div>
+                   <div class="col-lg-8 col-md-7 col-12">
+                      <div class="card blur shadow-blur max-height-vh-70" id="chat_container">
+                         <div class="card-header shadow-lg">
+                            <div class="row">
+                               <div class="col-lg-10 col-8">
+                                  <div class="d-flex align-items-center">
+                                     <div class="ms-3">
+                                        Start Conversation
+                                     </div>
+                                  </div>
+                               </div>
 
+                            </div>
 
+                         </div>
+
+                      </div>
+                   </div>
                 </div>
-             </div>
-          </div>
-       </div>
-    </div>
 
-</div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+</section>
+
 
 {% endblock %}
 

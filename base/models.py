@@ -241,3 +241,14 @@ class Grade(models.Model):
             # If any quarter is None, set final_grade and remarks to None
             self.final_grade = None
             self.remarks = None
+
+
+
+class Event(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    date = models.DateField()
+
+    def __str__(self):
+        return f"{self.title} - {self.date}"
+    

@@ -14,163 +14,170 @@
 
 <div class="row">
 
+  <!-- Main Content Section -->
   <div class="col-lg-9 col-md-7 mb-md-0 mb-4">
-
-
-
-      <div class="card p-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-
-          <!--
-          <h6>{{ year_level_section.year_level }} - {{ year_level_section.section }}</h6>
-          -->
-         
-          <p class="text-sm mb-0">
-            Class Adviser: 
-            <span class="font-weight-bold text-success text-uppercase"> {{ year_level_section.instructor }}</span>
-          </p>
-
-
-            <div class="dropdown ms-auto">
-              <a type="button" href="javascript:;" class="btn text-white bg-gradient-success cursor-pointer" id="dropdownTable2" data-bs-toggle="dropdown" aria-expanded="false">
-                
-                <i class="material-icons text-md me-2">edit</i>Update Section
-              </a>
-              <ul class="dropdown-menu px-2 py-3 dropdown-menu-end" aria-labelledby="dropdownTable2">
-                <li><a type="button" data-bs-toggle="modal" data-bs-target="#add_subject" class="dropdown-item border-radius-md" href="javascript:;">Add Subject</a></li>
-                <li><a type="button" class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#update_instructor">Update Adviser</a></li>
-              </ul>
-            </div>
-         
+    <div class="card rounded p-3">
+      <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+        <p class="text-sm mb-0">
+          Class Adviser:
+          <span class="font-weight-bold text-success text-uppercase"><a href="{% url 'instructor_detail' year_level_section.instructor.employee_id %}" class="text-success">{{ year_level_section.instructor }}</a></span>
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="dropdown">
+            <a type="button" href="javascript:;" class="btn btn-sm mt-2 text-white bg-gradient-success cursor-pointer w-100 w-md-auto" id="dropdownTable2" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="material-icons text-md me-2">edit</i>Update Section
+            </a>
+            <ul class="dropdown-menu px-2 py-3 dropdown-menu-end" aria-labelledby="dropdownTable2">
+              <li><a type="button" data-bs-toggle="modal" data-bs-target="#add_subject" class="dropdown-item border-radius-md" href="javascript:;">Add Subject</a></li>
+              <li><a type="button" class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#update_instructor">Update Adviser</a></li>
+            </ul>
+          </div>
+          <!-- View Students Button for Small Screens -->
+          <button class="btn bg-gradient-success ms-3 btn-sm mt-2 d-md-none" id="view-students-btn">
+            <i class="fa fa-eye text-md me-2"></i> View Students
+          </button>
         </div>
-        <div class="row">
+      </div>
 
-          {% if subjects %}
-            {% for subj in subjects %}
-
-            <div class="col-xl-4 col-sm-6 mb-xl-0 mt-3 mb-4">
-              <div class="card mb-3">
-                  <div class="card-header p-3 pt-2">
-                    <div class="icon icon-lg icon-shape bg-gradient-success shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                        <i class="material-icons opacity-10">menu_book</i>
-                    </div>
-                    <div class="text-end pt-1">
-                        <p class="text-sm mb-0 text-capitalize">{{ subj.day}} {{ subj.start_time}} - {{ subj.end_time}}</p>
-                        <h4 class="mb-0 text-uppercase">{{subj.name}}</h4>
-                    </div>
-                  </div>
-                  <hr class="dark horizontal my-0">
-                  <div class="card-footer p-3 d-flex justify-content-between align-items-center">
-                    <p class="mb-0 text-sm text-capitalize"><span class="text-success text-sm font-weight-bolder"> {{ year_level_section.year_level }} - {{ year_level_section.section }}</span></p>
-
-                      <a type="button" class="text-info" data-bs-toggle="modal" data-bs-target="#edit_subject"
-                        data-subject-id="{{ subj.id }}"
-                        data-subject-name="{{ subj.name }}"
-                        data-day="{{ subj.day }}"
-                        data-start-time="{{ subj.start_time|date:'H:i' }}"
-                        data-end-time="{{ subj.end_time|date:'H:i' }}"
-                        data-description="{{ subj.description }}"
-                      >
-                        <i class="material-icons text-lg">edit</i>
-                      </a>
-                  </div>
+      <div class="row">
+        {% if subjects %}
+        {% for subj in subjects %}
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mt-3 mb-4">
+          <div class="card mb-3">
+            <div class="card-header p-3 pt-2">
+              <div class="icon icon-lg icon-shape bg-gradient-success shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                <i class="material-icons opacity-10">menu_book</i>
+              </div>
+              <div class="text-end pt-1">
+                <p class="text-sm mb-0 text-capitalize">{{ subj.day}} {{ subj.start_time}} - {{ subj.end_time}}</p>
+                <h4 class="mb-0 text-uppercase">{{subj.name}}</h4>
               </div>
             </div>
-
-            {% endfor %}
-
-          {% else %}
-
-            <p class="text-center">No subjects associated with this section </p>
-          {% endif %}
-
-
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+              <p class="mb-0 text-sm text-capitalize"><span class="text-success text-sm font-weight-bolder">{{ year_level_section.year_level }} - {{ year_level_section.section }}</span></p>
+              <a type="button" class="text-info" data-bs-toggle="modal" data-bs-target="#edit_subject"
+                data-subject-id="{{ subj.id }}"
+                data-subject-name="{{ subj.name }}"
+                data-day="{{ subj.day }}"
+                data-start-time="{{ subj.start_time|date:'H:i' }}"
+                data-end-time="{{ subj.end_time|date:'H:i' }}"
+                data-description="{{ subj.description }}">
+                <i class="material-icons text-lg">edit</i>
+              </a>
+            </div>
+          </div>
         </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-center">No subjects associated with this section</p>
+        {% endif %}
       </div>
-
-
-  
-    <div class="card mt-4">
-      <div class="card-header d-flex justify-content-between">
-          <h6>Students </h6>
-          <p class="text-sm mb-0">
-              <a href="" class="" type="button"><span class="font-weight-bold text-success ms-1"><i class="fa fa-user mx-2"></i>{{ students.count }}</span></a>
+    </div>
+  </div>
+  <!-- Sidebar Section (Student List) -->
+  <div class="col-lg-3 col-md-5 d-none d-md-block" id="students-sidebar">
+    <div class="card">
+      <div class="card-header d-flex flex-column flex-row justify-content-between">
+        <div class="d-flex align-items-center mb-3 mb-md-0">
+          <h6 class="me-1">Students </h6>
+          <p class="text-sm">
+            <a href="" class="" type="button">
+              <span class="font-weight-bold text-success ms-1">
+                <i class="fa fa-user mx-2"></i>{{ students.count }}
+              </span>
+            </a>
           </p>
+        </div>
+        
+        <div class="w-100">
+          <div class="input-group input-group-outline">
+            <label class="form-label">Search here...</label>
+            <input type="text" class="form-control" id="student-search" autocomplete="off">
+          </div>
+        </div>
+        <!-- X Button for Small Screens to Close Sidebar -->
+        <button class="btn-close d-md-none ms-auto" id="close-sidebar-btn"></button>
       </div>
-      <div class="table-responsive">
+
+      <div class="table-responsive" id="students-table">
         <table class="table align-items-center mb-0 mt-0">
           <thead>
             <tr>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Student</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Contact</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Guardian</th>
-              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact</th>
-              <th class="text-secondary opacity-7"></th>
             </tr>
           </thead>
-          <tbody>
-              {% for stud in students %}
-              <tr>
-                  <td>
-                  <div class="d-flex px-2 py-1">
-                      <div>
-                      <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-xs">{{ stud.firstname }} {{ stud.lastname}} (Male, 22) </h6>
-                      <p class="text-xs text-secondary mb-0">18-9398-54S</p>
-                      </div>
+          <tbody id="student-table-body">
+            {% for stud in students %}
+            <tr>
+              <td>
+                <div class="d-flex px-2 py-1">
+                  <div>
+                    <img src="{{ stud.avatar.url }}" class="avatar avatar-md me-3">
                   </div>
-                  </td>
-                  <td>
-                      <p class="text-xs font-weight-bold mb-0">09456656707</p>
-                      <p class="text-xs text-secondary mb-0">mingarine.jamesivan.c@gmail.com</p>
-                  </td>
-              
-
-                  <td>
-
-                    
-                      {% for guard in stud.guardians.all %}
-                    <p class="text-xs font-weight-bold mb-0">{{ guard.user.first_name }} {{ guard.user.last_name}}</p>
-                    
-                    <p class="text-xs text-secondary mb-0">( {{ guard.user.id}} )</p>
-                    {% empty %}
-                      
-                      <p class="text-xs text-secondary mb-0">No Guardian Assigned</p>
-                    {% endfor %}
-                  </td>
-                  <td class="text-center">
-
-                    <p class="text-xs font-weight-bold mb-0">vanceeq@gmail.com</p>
-                  
-                    <p class="text-xs text-secondary mb-0">09456656707</p>
-                  </td>
-
-                  <td class="align-middle">
-                  <a href="javascript:;" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                      View
-                  </a>
-                  </td>
-              </tr>
-              {% endfor %}
-
-
-              
-
-
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-md"><a href="{% url 'student_profile' stud.student_id %}">{{ stud.firstname }} {{ stud.lastname}} ({{ stud.gender }}, {{ stud.age }}) </a></h6>
+                    <p class="text-sm text-secondary mb-0">{{ stud.student_id }}</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
           </tbody>
         </table>
+        <!-- Message to show when no students match the search -->
+        <p id="no-results-message" class="text-center mt-3 d-none">No matching student found</p>
       </div>
     </div>
-
-
-
   </div>
 
-  {% include 'base/admin/section_tab.html' %}
+<!-- Sidebar Section (Student List) as Offcanvas -->
+  <div class="offcanvas offcanvas-end w-75 p-0" tabindex="-1" id="studentSidebar" aria-labelledby="studentSidebarLabel">
+    <div class="offcanvas-header">
+      <h5 id="studentSidebarLabel" class="text-success">Students <span>(<i class="fa fa-user mx-2"></i>{{ students.count }} )</span></h5>
+      <button type="button" class="btn text-danger text-lg text-reset" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa fa-close"></i></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Search Input -->
+      <div class="input-group input-group-outline mb-3">
+        <label class="form-label">Search here...</label>
+        <input type="text" class="form-control" id="student-search" autocomplete="off">
+      </div>
+
+      <!-- Students Table -->
+      <div class="table-responsive" id="students-table">
+        <table class="table align-items-center mb-0 mt-0 p-0">
+          <thead>
+            <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Student</th>
+            </tr>
+          </thead>
+          <tbody id="student-table-body">
+            {% for stud in students %}
+            <tr>
+              <td>
+                <div class="d-flex px-2 py-1">
+                  <div>
+                    <img src="{{ stud.avatar.url }}" class="avatar avatar-lg me-3">
+                  </div>
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-md">{{ stud.firstname }} {{ stud.lastname}} ({{ stud.gender }}, {{ stud.age }}) </h6>
+                    <p class="text-sm text-secondary mb-0">{{ stud.student_id }}</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <!-- Message to show when no students match the search -->
+        <p id="no-results-message" class="text-center mt-3 d-none">No matching student found</p>
+      </div>
+    </div>
+  </div>
 
 </div>
+
 
 
 <!-- Modal -->
@@ -380,6 +387,82 @@
 {% endblock %}
 
 {% block js %}
+
+<script>
+
+  const offcanvasElement = document.getElementById('studentSidebar');
+  const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+
+
+  document.getElementById('view-students-btn').addEventListener('click', function() {
+    offcanvas.show();
+  });
+
+  document.getElementById('student-search').addEventListener('input', function() {
+    const searchQuery = this.value.toLowerCase();
+    const tableBody = document.getElementById('student-table-body');
+    const rows = tableBody.getElementsByTagName('tr');
+    let hasMatch = false;
+
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const studentName = row.getElementsByTagName('h6')[0].textContent.toLowerCase();
+
+   
+      if (studentName.includes(searchQuery)) {
+        row.style.display = ''; 
+        hasMatch = true;
+      } else {
+        row.style.display = 'none'; 
+      }
+    }
+
+
+    const noResultsMessage = document.getElementById('no-results-message');
+    if (hasMatch) {
+      noResultsMessage.classList.add('d-none');
+    } else {
+      noResultsMessage.classList.remove('d-none');
+    }
+  });
+
+
+
+
+</script>
+<script>
+  document.getElementById('student-search').addEventListener('input', function() {
+    const searchQuery = this.value.toLowerCase();
+    const tableBody = document.getElementById('student-table-body');
+    const rows = tableBody.getElementsByTagName('tr');
+    let hasMatch = false;
+  
+    // Loop through all rows
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const studentName = row.getElementsByTagName('h6')[0].textContent.toLowerCase();
+  
+      // Check if the student name contains the search query
+      if (studentName.includes(searchQuery)) {
+        row.style.display = ''; // Show row if match
+        hasMatch = true;
+      } else {
+        row.style.display = 'none'; // Hide row if no match
+      }
+    }
+  
+    // Display "No matching student found" message if no match
+    const noResultsMessage = document.getElementById('no-results-message');
+    if (hasMatch) {
+      noResultsMessage.classList.add('d-none');
+    } else {
+      noResultsMessage.classList.remove('d-none');
+    }
+  });
+  
+</script>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

@@ -4,7 +4,26 @@
 
 
 {% block stylesheet %}
+<style>
 
+    /* Customize the upload button */
+    input[type="file"] {
+      display: none;
+    }
+    
+    .custom-upload-btn {
+      background-color: #28a745; /* Customize your button color */
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .custom-upload-btn:hover {
+      background-color: #218838; /* Darker shade on hover */
+    }
+    
+</style>
 {% endblock %}
 
 
@@ -22,7 +41,7 @@
                 <h6>List of Students</h6>
                 <p class="text-sm mb-0">
                     <i class="fa fa-plus text-info" aria-hidden="true"></i>
-                    <a href="" type="button" data-bs-toggle="modal" data-bs-target="#add_new_instructor"><span class="font-weight-bold text-success ms-1">Add New</span></a>
+                    <a href="" type="button" data-bs-toggle="modal" data-bs-target="#add_new_student"><span class="font-weight-bold text-success ms-1">Add New</span></a>
                 </p>
             </div>
 
@@ -44,7 +63,7 @@
                         <td>
                         <div class="d-flex px-2 py-1">
                             <div>
-                            <img src="/static/assets/img/team-2.jpg" class="avatar avatar-sm me-3">
+                            <img src="{{ student.avatar.url }}" class="avatar avatar-sm me-3">
                             </div>
                             <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm text-capitalize"><a href="{% url 'student_profile' student.student_id %}">{{ student.firstname }} {{ student.lastname }} ( {{ student.gender }}, {{ student.age}} )</a></h6>
@@ -96,6 +115,111 @@
 
 
 
+<!-- Modal -->
+<div class="modal fade" id="add_new_student" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+            
+        <div class="modal-content">
+            <form method="POST" enctype="multipart/form-data" id="add-student-form" action="{% url 'add_student' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add new Student</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="d-flex justify-content-center">
+                            <!-- Profile Image Display as Upload Button -->
+                            <div class="profile-image-preview mb-3 text-center">
+                              <img id="profileImageDisplay" src="/static/images/default_avatar.png" class="img-fluid rounded-circle" alt="Profile Picture" style="max-width: 120px; height: 120px; object-fit: cover; cursor: pointer;">
+                              <input type="file" name="avatar" class="d-none" id="profileImageUpload" accept="image/*">
+                              
+                            </div>
+                            
+                        </div>
+
+
+                        <div class="col-md-6 col-6">
+                            <div class="input-group input-group-static mb-4">
+                                <label for="exampleFormControlSelect1" class="ms-0">Year and Section: </label>
+                                <select class="form-control" id="" name="year_level_section" >
+                                    <option value="" disabled selected>...................</option>
+                                    {% for yls in year_level_section %}
+                                        <option value="{{ yls.id }}">{{ yls }}</option>
+                                  {% endfor %}
+
+                                </select>
+                              </div>
+                        </div>
+                          
+                          <div class="col-md-6 col-6">
+                            
+                            <div class="input-group input-group-outline mt-4">
+                              <label class="form-label">Student ID number</label>
+                              <input type="text" name="student_id" class="form-control" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="input-group input-group-outline mb-2 ">
+                              <label class="form-label">Firstname</label>
+                              <input type="text" name="firstname" class="form-control" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="input-group input-group-outline mb-2">
+                              <label class="form-label">Lastname</label>
+                              <input type="text" name="lastname" class="form-control" required>
+                            </div>
+                          </div>
+
+                          <hr>
+                          <div class="col-md-12 col-12 d-flex flex-column align-items-center">
+                            <div class="d-flex align-items-center justify-content-center mb-3">
+                              <label class="form-label me-2">Gender:</label>
+                              <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="gender" id="customRadio1" value="Male">
+                                <label class="custom-control-label" for="customRadio1">Male</label>
+                              </div>
+                              <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="gender" id="customRadio2" value="Female">
+                                <label class="custom-control-label" for="customRadio2">Female</label>
+                              </div>
+
+                                                        
+                              <div class="input-group input-group-outline ms-3 mb-2 w-25">
+                                <label class="form-label">Age</label>
+                                <input type="number" name="age" class="form-control" required>
+                              </div>
+
+                            </div>
+
+                          </div>
+                          
+                          <div class="col-md-3 col-3">
+    
+                          </div>
+
+
+
+
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn bg-gradient-info">Add student</button>
+                </div>
+                    
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
 
 
 
@@ -106,13 +230,111 @@
 {% block js %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-      })
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('add-student-form'); 
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+            const formData = new FormData(form);  
+
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // Fetch API call to submit the form data
+            fetch('{% url "add_student" %}', {  
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                },
+                body: formData
+            })
+            .then(response => {
+                // Check if the response is valid
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parse JSON response
+            })
+            .then(data => {
+                console.log(data);  // Log the data for debugging
+                
+                // Handle success response
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 1000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        location.reload();  // Reload the page after success
+                    });
+                } else {
+                    // Handle error response
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.message,
+                        icon: 'error',
+                        timer: 3000,
+                        showConfirmButton: true,
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error); // Log any errors
+
+                // Display a generic error message
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred. Please try again.',
+                    icon: 'error',
+                    timer: 3000,
+                    showConfirmButton: true,
+                });
+            });
+        });
+    });
 </script>
 
+
+
+<script>
+// Get the input and image elements
+const profileImageInput = document.getElementById('profileImageUpload');
+const profileImageDisplay = document.getElementById('profileImageDisplay');
+
+// Event listener for image file input
+profileImageInput.addEventListener('change', function(event) {
+  const file = event.target.files[0]; // Get the selected file
+  
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    
+    // When the file is loaded, set the image source to the selected file
+    reader.onload = function(e) {
+      profileImageDisplay.src = e.target.result;
+    };
+    
+    reader.readAsDataURL(file); // Read the file as a data URL
+  } else {
+    // Handle cases where the file is not an image
+    alert('Please select a valid image file.');
+  }
+});
+
+// Event listener for clicking the profile image to trigger file input
+profileImageDisplay.addEventListener('click', function() {
+  profileImageInput.click(); // Open the file input dialog when the image is clicked
+});
+</script>
+
+
+
 <script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+
 <script>
     let table = new DataTable('#student_table');
 

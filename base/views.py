@@ -5,13 +5,17 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.db import IntegrityError, DatabaseError
 from django.db.models import Count
-
+from django.utils import timezone
+from datetime import datetime, timedelta
 import random
 import string
 from django.core.mail import send_mail
 from django.db import transaction
 from django.contrib.auth.models import Group 
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.views.decorators.csrf import csrf_exempt
+import json
 # Create your views here.
 
 
@@ -57,7 +61,56 @@ def add_feed(request):
         return JsonResponse(response_data, status=400)
     
 def upcoming_events(request):
+    # Get the current date
+    today = timezone.now().date()
+    
+    # Define the end date (e.g., 3 months from today)
+    end_date = today + timedelta(days=90)
+
+    # Filter events that are happening from today up to the end date
+    events = Event.objects.filter(date__range=[today, end_date]).order_by('date')
+
+    # Check if the request is an AJAX request
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Prepare the event data
+        event_data = [
+            {
+                'id': event.id,
+                'title': event.title,
+                'description': event.description,
+                'date': event.date.strftime('%Y-%m-%d')  # Format the date as a string
+            } for event in events
+        ]
+        return JsonResponse(event_data, safe=False)
+
     return render(request, 'base/upcoming_events.html')
+
+@csrf_exempt
+def update_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            event.title = data.get('title', event.title)
+            event.description = data.get('description', event.description)
+            event.save()
+            return JsonResponse({'message': 'Event updated successfully'}, status=200)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def delete_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    if request.method == 'DELETE':
+        event.delete()
+        return JsonResponse({'message': 'Event deleted successfully'}, status=204)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
 
 
 @login_required
@@ -229,7 +282,7 @@ def get_grouped_sections():
 def student_page(request):
     students = Student.objects.all()
     
-    guardians = Guardian.objects.filter(student__in=students).distinct()
+    year_level_section = YearLevelSection.objects.all()
 
     grouped_sections = get_grouped_sections()
     
@@ -237,7 +290,7 @@ def student_page(request):
         'grouped_sections': grouped_sections,
         
         'students': students,
-        'guardians': guardians
+        'year_level_section': year_level_section
     }
     
     return render(request, 'base/admin/students.html', context)
@@ -247,15 +300,70 @@ def student_profile(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
     guardians = student.guardians.all()  # Get the related guardians
 
+    attendance = Attendance.objects.filter(student=student) 
+
+
+    grades = Grade.objects.filter(student=student).select_related('subject')
+
+
+    year_level_section = student.year_level_section
+    subjects = year_level_section.subjects.all()  
+  
+    subjects_with_grades = {grade.subject.id for grade in grades}
+    subjects_without_grades = subjects.exclude(id__in=subjects_with_grades)
+
+    
     context = {
         'student': student,
-        'guardians': guardians
+        'guardians': guardians,
+        'attendance': attendance,
+        'grades': grades,
+        'subjects': subjects,
+        'subjects_without_grades': subjects_without_grades,  # Ne 
     }
     return render(request, 'base/admin/student_profile.html', context)
+def add_student(request):
+    if request.method == 'POST':
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('lastname')
+        student_id = request.POST.get('student_id')
+        avatar = request.FILES.get('avatar')  
+        gender = request.POST.get('gender')
+        age = request.POST.get('age')
+        year_level_section_id = request.POST.get('year_level_section')
 
+        try:
+            # Validate required fields
+            if not firstname or not lastname or not student_id:
+                return JsonResponse({'status': 'error', 'message': 'Firstname, lastname, and student ID are required.'}, status=400)
 
+            year_level_section = YearLevelSection.objects.get(id=year_level_section_id)
+            
+            # Create a new student instance
+            student = Student(
+                firstname=firstname,
+                lastname=lastname,
+                student_id=student_id,
+                gender=gender,
+                age=age,
+                year_level_section=year_level_section
+            )
+            
+            # Only set avatar if it exists
+            if avatar:
+                student.avatar = avatar
+            
+            student.save()
 
+            return JsonResponse({'status': 'success', 'message': 'Student added successfully!'})
 
+        except YearLevelSection.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Year level section does not exist.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    # If it's a GET request, render the form page
+    return render(request, 'base/admin/students.html')
 
 @login_required
 def section_detail(request, section_slug):
