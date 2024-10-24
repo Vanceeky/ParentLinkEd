@@ -11,11 +11,14 @@
             <div class="card-header p-3">
                 <div class="row">
                     <div class="col-md-6">
+                        <div class="col-md-6 d-flex justify-content-between align-items-center">
+                       
                         <h6 class="mb-0">Subjects</h6>
+                        
+                        <button class="btn btn-sm btn-outline-success d-sm-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">View Reminders</button>
                     </div>
-                    <div class="col-md-6 d-flex justify-content-end align-items-center">
-                        <small>23 - 30 March 2020</small>
                     </div>
+          
                 </div>
                 <hr class="horizontal dark mb-0">
             </div>
@@ -66,7 +69,7 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-12 mt-4 mt-lg-0">
+    <div class="col-lg-3 col-12 mt-4 mt-lg-0 d-none d-lg-block">
 
         <div class="card">
             <div class="card-header p-3 pb-0">
@@ -77,7 +80,7 @@
                         </div>
                         <div class="ms-3 d-flex flex-column justify-content-center">
                             
-                        <h5 class="mb-0 text-sm">October 4. 2024</h5>
+                        <h5 class="mb-0 text-sm" id="date-large">October 4. 2024</h5>
                             <h6 class="font-weight-bolder text-muted mb-0">Reminders</h6>
                         </div>
                     </div>
@@ -89,71 +92,82 @@
         <!-- Reminders List -->
             <div class="card-body p-0 pt-1">
                 <hr class="dark horizontal">
-                <div id="reminder-list">
-                {% for rem in reminders %}
-                <div class="d-flex mb-2">
-                    <div>
+                   <!-- Large screen reminder list -->
+                        <div id="reminder-list-lg" class="d-none d-lg-block">
+                            {% for rem in reminders %}
+                            <div class="d-flex mb-2" id="reminder-lg-{{ rem.id }}">
+                                <div>
+                                    <div class="form-check">
+                                        <input class="form-check-input complete-reminder-checkbox" type="checkbox" value="" id="{{ rem.id }}">
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <div class="numbers">
+                                        <h6 class="mb-1 text-dark text-sm text-md-lg">{{ rem.title }}</h6>
+                                        <span class="text-sm text-md-lg">{{ rem.description }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="dark horizontal" id="hr-lg-{{ rem.id }}">
+                            {% empty %}
+
+                            <p class="text-center">No reminders today</p>
+                            {% endfor %}
+                    
+                    </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<!-- OFF CANVAS -->
+<div class="offcanvas offcanvas-end w-75" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <div class="col-8 d-flex">
+            <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
+                <i class="ni ni-calendar-grid-58 text-lg opacity-10" aria-hidden="true"></i>
+            </div>
+            <div class="ms-3 d-flex flex-column justify-content-center">
+                
+            <h5 class="mb-0 text-sm" id="date-small">October 4. 2024</h5>
+                <h6 class="font-weight-bolder text-muted mb-0">Reminders</h6>
+            </div>
+        </div>
+      <button type="button" class="btn text-danger text-reset" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa fa-close fa-2x"></i></button>
+    </div>
+    <div class="offcanvas-body">
+            <!-- Small screen reminder list -->
+        <div id="reminder-list-sm" class="d-lg-none">
+            {% for rem in reminders %}
+            <div class="d-flex mb-2" id="reminder-sm-{{ rem.id }}">
+                <div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="">
+                        <input class="form-check-input complete-reminder-checkbox" type="checkbox" value="" id="{{ rem.id }}">
                     </div>
-                    </div>
-                    <div class="ms-3">
+                </div>
+                <div class="ms-3">
                     <div class="numbers">
                         <h6 class="mb-1 text-dark text-sm">{{ rem.title }}</h6>
                         <span class="text-sm">{{ rem.description }}</span>
                     </div>
-                    </div>
-                </div>
-                <hr class="dark horizontal">
-                {% endfor %}
                 </div>
             </div>
+            <hr class="dark horizontal" id="hr-sm-{{ rem.id }}">
+            {% empty %}
+
+            <p class="text-center">No reminders today</p>
+            {% endfor %}
         </div>
+        <div class="">
 
-        <div class="card overflow-hidden mt-4">
-
-                <div class="upcoming_events">
-                    <div class="d-flex justify-content-between card-header pb-0">
-                        <h6>Upcoming Events this October 2024</h6>
-
-                    </div>
-                    <div class="card-body p-3">
-                        <div class="timeline timeline-one-side">
-                            <div class="timeline-block mb-3">
-                                <span class="timeline-step">
-                                    <i class="material-icons text-success text-gradient">event</i>
-                                </span>
-                                <div class="timeline-content">
-                                    <h6 class="text-dark text-sm font-weight-bold mb-0">Christmas</h6>
-                                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">August 26, 2024 10:30 am</p>
-                                </div>
-                            </div>
-                            <div class="timeline-block mb-3">
-                                <span class="timeline-step">
-                                    <i class="material-icons text-success text-gradient">event</i>
-                                </span>
-                                <div class="timeline-content">
-                                    <h6 class="text-dark text-sm font-weight-bold mb-0">Christmas</h6>
-                                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">August 26, 2024 10:30 am</p>
-                                </div>
-                            </div>
-                            <div class="timeline-block mb-3">
-                                <span class="timeline-step">
-                                    <i class="material-icons text-success text-gradient">event</i>
-                                </span>
-                                <div class="timeline-content">
-                                    <h6 class="text-dark text-sm font-weight-bold mb-0">Christmas</h6>
-                                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">August 26, 2024 10:30 am</p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+            <button class="btn p-2 bg-gradient-success float-end" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-reminder"><i class="fa fa-plus"></i> Add new reminder </button>
         </div>
     </div>
-</div>
+  </div>
 
+  
 
 <!-- MODAL -->
  <div class="col-md-4">
@@ -208,83 +222,194 @@
 
 {% block js %}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get today's date
+        const today = new Date();
+    
+        // Format the date as "Month Day, Year"
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = today.toLocaleDateString('en-US', options);
+    
+        // Update the large screen date element
+        const largeScreenDateElement = document.getElementById('date-large');
+        if (largeScreenDateElement) {
+            largeScreenDateElement.textContent = formattedDate;
+        }
+    
+        // Update the small screen date element
+        const smallScreenDateElement = document.getElementById('date-small');
+        if (smallScreenDateElement) {
+            smallScreenDateElement.textContent = formattedDate;
+        }
+    });
+    </script>
+
 <!-- Add SweetAlert2 script -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- AJAX Script to handle form submission -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all checkboxes that are for completing reminders
+        const checkboxes = document.querySelectorAll('.complete-reminder-checkbox');
+    
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    const reminderId = this.id;
+    
+                    // Send AJAX request to complete the reminder
+                    fetch(`/complete-reminder/${reminderId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // SweetAlert Success Notification
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Reminder Completed',
+                                text: 'The reminder has been marked as completed successfully!'
+                            });
+    
+                            // Remove the reminder from both large and small screen lists
+                            const reminderLg = document.getElementById(`reminder-lg-${reminderId}`);
+                            const hrLg = document.getElementById(`hr-lg-${reminderId}`);
+                            const reminderSm = document.getElementById(`reminder-sm-${reminderId}`);
+                            const hrSm = document.getElementById(`hr-sm-${reminderId}`);
+    
+                            if (reminderLg && hrLg) {
+                                reminderLg.remove();
+                                hrLg.remove();
+                            }
+    
+                            if (reminderSm && hrSm) {
+                                reminderSm.remove();
+                                hrSm.remove();
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to complete the reminder!'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong while completing the reminder!'
+                        });
+                    });
+                }
+            });
+        });
+    });
+    </script>
+
 <script>
     document.getElementById('add-reminder-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-  
-      const formData = new FormData(this);
-  
-      // Send AJAX request
-      fetch("{% url 'add_new_reminder' %}", {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        },
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Reminder Added',
-            text: 'The reminder has been added successfully!'
-          });
-  
-          const dateTime = new Date(formData.get('date_time'));
-  
-          // Check if reminder's date is today's date
-          const today = new Date();
-          if (dateTime.toDateString() === today.toDateString()) {
-            // Add reminder to the reminder list
-            const reminderList = document.getElementById('reminder-list');
-            const newReminder = `
-              <div class="d-flex mb-2">
-                <div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="">
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <div class="numbers">
-                    <h6 class="mb-1 text-dark text-sm">${formData.get('title')}</h6>
-                    <span class="text-sm">${formData.get('description')}</span>
-                  </div>
-                </div>
-              </div>
-              <hr class="dark horizontal">
-            `;
-            reminderList.insertAdjacentHTML('beforeend', newReminder);
-          }
-  
-          // Reset the form
-          document.getElementById('add-reminder-form').reset();
-  
-          // Close the modal
-          const modalElement = document.getElementById('modal-add-reminder');
-          const modalInstance = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
-          modalInstance.hide(); // Hide the modal
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'There was an error adding the reminder!'
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Something went wrong!'
+        event.preventDefault();
+    
+        const formData = new FormData(this);
+    
+        // Send AJAX request
+        fetch("{% url 'add_new_reminder' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Reminder Added',
+                    text: 'The reminder has been added successfully!'
+                });
+    
+                const dateTime = new Date(formData.get('date_time'));
+    
+                // Check if reminder's date is today's date
+                const today = new Date();
+                if (dateTime.toDateString() === today.toDateString()) {
+                    // Add reminder to both large and small screen lists
+                    const reminderListLg = document.getElementById('reminder-list-lg');
+                    const reminderListSm = document.getElementById('reminder-list-sm');
+    
+                    const newReminderLg = `
+                        <div class="d-flex mb-2">
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="">
+                                </div>
+                            </div>
+                            <div class="ms-3">
+                                <div class="numbers">
+                                    <h6 class="mb-1 text-dark text-sm text-md-lg">${formData.get('title')}</h6>
+                                    <span class="text-sm text-md-lg">${formData.get('description')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal">
+                    `;
+    
+                    const newReminderSm = `
+                        <div class="d-flex mb-2">
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="">
+                                </div>
+                            </div>
+                            <div class="ms-3">
+                                <div class="numbers">
+                                    <h6 class="mb-1 text-dark text-sm">${formData.get('title')}</h6>
+                                    <span class="text-sm">${formData.get('description')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal">
+                    `;
+    
+                    // Insert into the large screen list
+                    reminderListLg.insertAdjacentHTML('beforeend', newReminderLg);
+                    // Insert into the small screen list
+                    reminderListSm.insertAdjacentHTML('beforeend', newReminderSm);
+                }
+    
+                // Reset the form
+                document.getElementById('add-reminder-form').reset();
+    
+                // Close the modal
+                const modalElement = document.getElementById('modal-add-reminder');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+                modalInstance.hide(); // Hide the modal
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'There was an error adding the reminder!'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Something went wrong!'
+            });
         });
-      });
     });
-  </script>
+</script>
+    
 
 {% endblock %}

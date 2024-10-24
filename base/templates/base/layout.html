@@ -80,6 +80,10 @@
                  <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="{% url 'index' %}">
                  ParentLinkED
                  </a>
+                 
+                 <div class="d-flex">
+                  <button class="btn btn-sm btn-info mt-3 d-block d-sm-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Inbox</button>
+
                  <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
                  <span class="navbar-toggler-icon mt-2">
                  <span class="navbar-toggler-bar bar1"></span>
@@ -87,6 +91,10 @@
                  <span class="navbar-toggler-bar bar3"></span>
                  </span>
                  </button>
+
+               </div>
+                 
+
                  <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
                     <ul class="navbar-nav navbar-nav-hover mx-auto">
                        <li class="nav-item mx-2">
@@ -162,7 +170,7 @@
                                                 </a>
                                              </li>
                                              <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                                <a class="dropdown-item border-radius-md" href="">
+                                                <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
                                                    <div class="d-flex justify-content-center  align-items-center text-danger">
                                                       <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
                                                       Sign out
@@ -181,7 +189,7 @@
                                                       Dashboard
                                                   </div>
                                               </a>
-                                              <a class="dropdown-item border-radius-md" href="">
+                                              <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
                                                   <div class="d-flex  align-items-center text-danger">
                                                       <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
                                                       Sign out
@@ -250,7 +258,7 @@
                                                    Dashboard
                                              </div>
                                           </a>
-                                          <a class="dropdown-item border-radius-md" href="">
+                                          <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
                                              <div class="d-flex  align-items-center text-danger">
                                                    <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
                                                    Sign out

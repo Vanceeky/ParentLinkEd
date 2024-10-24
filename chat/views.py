@@ -18,6 +18,9 @@ def inbox(request):
         last_message = group.chat_messages.first()  
         other_members = group.members.exclude(id=user.id) 
         
+        if not last_message:
+            continue
+
         if last_message and last_message.author == user:
             last_message_text = f"You: {last_message.body}"
         else:
@@ -77,6 +80,9 @@ def chat_view(request, chatroom_name='public-chat'):
     groups_info = []
     for group in private_chat_groups:
         last_message = group.chat_messages.first()  # Due to ordering, this is the most recent
+        
+        if not last_message:
+            continue
         other_members = group.members.exclude(id=user.id)  # Other members in the group
         
         if last_message and last_message.author == user:

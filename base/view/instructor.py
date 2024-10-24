@@ -9,6 +9,7 @@ from chat.models import ChatGroup
 from django.contrib import messages
 
 
+
 def get_user_chat_groups(user):
     """
     Function to retrieve chat group information for a given user.
@@ -20,6 +21,9 @@ def get_user_chat_groups(user):
     for group in chat_groups:
         last_message = group.chat_messages.first()  # Get the most recent message
         other_members = group.members.exclude(id=user.id)  # Exclude the current user
+
+        if not last_message:
+            continue
         
         # Determine if the last message was sent by the user
         if last_message and last_message.author == user:
@@ -37,8 +41,19 @@ def get_user_chat_groups(user):
     return groups_info 
 
 
+def instructor_subjects(user):
+
+    instructor = get_object_or_404(Instructor, user=user)
+    
+    year_level_sections = instructor.year_level_sections.all().select_related('instructor').prefetch_related('subjects')
+
+    return year_level_sections
+
+
+    
 @login_required
 def instructor_home(request):
+
     instructor = get_object_or_404(Instructor, user=request.user)
     groups_info = get_user_chat_groups(request.user)  # Calling the reusable function
     
@@ -46,10 +61,12 @@ def instructor_home(request):
     reminders = Reminder.objects.filter(instructor=instructor, is_completed=False, date__lt=datetime.datetime.now())
 
     year_level_sections = instructor.year_level_sections.all().select_related('instructor').prefetch_related('subjects')
+
     
     context = {
         'instructor': instructor,
         'year_level_sections': year_level_sections,
+
         'reminders': reminders,
         'groups_info': groups_info,
     }
@@ -80,13 +97,18 @@ def subject_details(request, slug):
     announcements = Announcement.objects.filter(subject=subject)
 
     attendance = Attendance.objects.filter(subject=subject)
-
+    groups_info = get_user_chat_groups(request.user)  # Calling the reusable function
+    instructor_subjects_ = instructor_subjects(request.user)
 
     context = {
         'subject': subject,
         'sections_with_students': sections_with_students,
         'announcements': announcements,
-        'attendance': attendance
+        'attendance': attendance,
+        'groups_info': groups_info,
+
+        'year_level_sections': instructor_subjects_
+
     }
 
 
@@ -103,10 +125,13 @@ def instructor_students_list(request):
     instructor = get_object_or_404(Instructor, user=request.user)
     year_level_sections = instructor.year_level_sections.all()
     students = Student.objects.filter(year_level_section__in=year_level_sections)
-
+    groups_info = get_user_chat_groups(request.user)  # Calling the reusable function
+    instructor_subjects_ = instructor_subjects(request.user)
     context = {
         'instructor': instructor,
         'students': students,
+        'groups_info': groups_info,
+        'year_level_sections': instructor_subjects_
     }
     
     return render(request, 'base/instructor/student_list.html', context)
@@ -137,6 +162,13 @@ def add_new_reminder(request):
 
     return JsonResponse({'success': False})
 
+def complete_reminder(request, reminder_id):
+    reminder = get_object_or_404(Reminder, id=reminder_id)
+    reminder.is_completed = True
+    reminder.save()
+
+    return JsonResponse({'success': True})
+
 
 def student_profile(request, student_id):
    
@@ -154,7 +186,8 @@ def student_profile(request, student_id):
   
     subjects_with_grades = {grade.subject.id for grade in grades}
     subjects_without_grades = subjects.exclude(id__in=subjects_with_grades)
-  
+    groups_info = get_user_chat_groups(request.user)  # Calling the reusable function
+
     context = {
         'student': student,
         'guardians': guardians,
@@ -162,6 +195,7 @@ def student_profile(request, student_id):
         'grades': grades,
         'subjects': subjects,
         'subjects_without_grades': subjects_without_grades,  # Ne 
+        'groups_info': groups_info
     }
 
 
@@ -259,3 +293,49 @@ def add_grade(request):
             return JsonResponse({'success': False, 'message': "An error occurred while adding the grade: " + str(e)}, status=500)
 
     return JsonResponse({'success': False, 'message': "Invalid request method."}, status=400)
+
+
+
+
+def get_user_groups(user):
+    groups_with_last_message = []
+
+    # Retrieve all groups where the user is a member
+    user_groups = ChatGroup.objects.filter(members=user)
+
+    for group in user_groups:
+        # Get the last message for each group
+        last_message = group.chat_messages.first()  # Since messages are ordered by "-created_at"
+
+        # If there is no message in the group, skip this group
+        if not last_message:
+            continue
+
+        # Prepare the message display
+        if last_message.author == user:
+            message_preview = f"You: {last_message.body[:25]}"  # Show only the first 25 characters with "You:"
+        else:
+            message_preview = last_message.body[:25]  # Show the first 25 characters of the message
+
+        # If the message is longer than 25 characters, append "..." to indicate truncation
+        if len(last_message.body) > 25:
+            message_preview += "..."
+
+        # Get the other members in the group (excluding the current user)
+        other_members = group.members.exclude(id=user.id)
+
+        # Create a list of other members' names (first and last)
+        other_usernames = ', '.join([
+            f"{member.first_name} {member.last_name}" for member in other_members
+        ])
+
+        # Add group, last message info, and other members' names to the list
+        groups_with_last_message.append({
+            'group_name': group.group_name,
+            'last_message': message_preview,
+            'message_time': last_message.created_at,
+            'other_members': other_usernames  # Add the names of other users
+        })
+
+    return groups_with_last_message
+
