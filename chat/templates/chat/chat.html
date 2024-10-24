@@ -56,12 +56,15 @@
 
 
 <section class="pt-3 pb-4 test mt-8">
+    
     <div class="p-3 shadow-blur">
+        
         <div class="container">
 
 
 
 
+  
               
             <div class="mx-4 mt-n6 chat-groups-container" style="height: 85vh;">
                 <div class="py-4 h-100">
@@ -97,17 +100,24 @@
                         </div>
             
                         <div class="col-lg-8 col-md-7 col-12 h-100">
+                            {% if request.user.is_authenticated %}
+                            <div class="d-flex w-100">
+                            <button class="w-100 btn btn-sm btn-info mt-3 d-block d-sm-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">View inbox</button>
+                            </div>
+                            {% endif %}
                             <div class="card blur shadow-blur h-100" id="chat_container">
+                                
                                 <div class="card-header shadow-lg">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="d-flex align-items-center">
-                                                <div class="ms-3">
+                                                <div class="ms-3 d-flex justify-content-between align-items-center">
                                                     <h6 class="mb-0 d-block text-uppercase chat-header-name">
                                                         {% if other_user %}
                                                             {{ other_user.first_name }} {{ other_user.last_name }}
                                                         {% endif %}
                                                     </h6>
+                                              
                                                 </div>
                                             </div>
                                         </div>
@@ -132,9 +142,8 @@
                                         <div class="d-flex">
                                             <div class="input-group">
                                                 <div class="input-group input-group-outline my-3">
-                                                    <label class="form-label">Type here....</label>
-                                                    <input type="text" name="message" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)">
-                                                    <button type="submit" class="btn bg-gradient-primary mb-0 ms-2">
+                                                    <input type="text" name="message" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)" required placeholder="Type here...">
+                                                    <button type="submit" class="btn bg-gradient-success mb-0 ms-2">
                                                         <i class="ni ni-send"></i>
                                                     </button>
                                                 </div>

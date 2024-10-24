@@ -18,9 +18,15 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 # Create your views here.
 
+from django.conf import settings
+def manifest(request):
+    return JsonResponse(settings.PWA_MANIFEST)
+
+def offline(request):
+    return render(request, 'offline.html')
 
 def index(request):
-    return render(request, 'base/index.html')
+    return render(request, 'index.html')
 
 
 def feed(request):

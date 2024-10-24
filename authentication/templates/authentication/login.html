@@ -79,6 +79,22 @@
 
                      </li>
                      <li class="nav-item mx-2">
+                        <a href="{% url 'feed' %}" role="button" class="nav-link ps-2 cursor-pointer {% if request.path == '/feed/' %} active {% endif %}"aria-expanded="false">
+                        Feed
+
+                        </a>
+
+                       </li>
+
+                       <li class="nav-item mx-2">
+                        <a href="{% url 'upcoming_events' %} " role="button" class="{% if request.path == '/upcoming-events/' %} active {% endif %} nav-link ps-2 cursor-pointer"aria-expanded="false">
+                        Upcoming Events
+
+                        </a>
+
+                       </li>
+
+                     <li class="nav-item mx-2">
                       <a role="button" class="nav-link ps-2 cursor-pointer"aria-expanded="false">
                       About Us
 
@@ -94,13 +110,7 @@
 
                      </li>
 
-                     <li class="nav-item mx-2">
-                      <a href="{% url 'accounts-login' %}" role="button" class="nav-link ps-2 cursor-pointer"aria-expanded="false">
-                      Login
 
-                      </a>
-
-                     </li>
 
 
                      <!--

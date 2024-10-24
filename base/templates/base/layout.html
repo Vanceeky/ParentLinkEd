@@ -18,8 +18,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="/static/assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/logo_la_sallete.png">
+  <link rel="icon" type="image/png" href="/static/assets/img/logo_la_sallete.png">
   <title>
     {% block title %}  {% endblock %}| ParentLinkED
   </title>
@@ -49,6 +49,7 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet" />
 
 
+<link rel="manifest" href="/static/manifest.json">
 
   <style>
 
@@ -82,7 +83,6 @@
                  </a>
                  
                  <div class="d-flex">
-                  <button class="btn btn-sm btn-info mt-3 d-block d-sm-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Inbox</button>
 
                  <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
                  <span class="navbar-toggler-icon mt-2">
@@ -162,6 +162,14 @@
                                        <div class="d-none d-lg-block">
                                           <ul class="list-group">
                                              <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                                <a class="dropdown-item border-radius-md  text-center" href="{% url 'inbox' %}">
+                                                   <div class="d-flex justify-content-center align-items-center text-dark text-center">
+                                                      <i class="material-icons opacity-6 me-2 text-md">messages</i>
+                                                      Inbox
+                                                   </div>
+                                                </a>
+                                             </li>
+                                             <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
                                                 <a class="dropdown-item border-radius-md  text-center" href="{% url 'instructor_home' %}">
                                                    <div class="d-flex justify-content-center align-items-center text-dark text-center">
                                                       <i class="material-icons opacity-6 me-2 text-md">widgets</i>
@@ -183,18 +191,24 @@
                                        </div>
                                        <div class="row d-lg-none h-auto">
                                           <div class="col-md-12">
-                                              <a class="dropdown-item border-radius-md text-center" href="">
-                                                  <div class="d-flex align-items-center text-dark">
-                                                      <i class="material-icons opacity-6 me-2 text-md">widgets</i>
-                                                      Dashboard
-                                                  </div>
-                                              </a>
-                                              <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
-                                                  <div class="d-flex  align-items-center text-danger">
-                                                      <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
-                                                      Sign out
-                                                  </div>
-                                              </a>
+                                                <a class="dropdown-item border-radius-md text-center" href="{% url 'inbox' %}">
+                                                   <div class="d-flex align-items-center text-dark">
+                                                      <i class="material-icons opacity-6 me-2 text-md">messages</i>
+                                                      Inbox
+                                                   </div>
+                                                </a>
+                                                <a class="dropdown-item border-radius-md text-center" href="{% url 'instructor_home' %}">
+                                                   <div class="d-flex align-items-center text-dark">
+                                                         <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                                         Dashboard
+                                                   </div>
+                                                </a>
+                                                <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
+                                                   <div class="d-flex  align-items-center text-danger">
+                                                         <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
+                                                         Sign out
+                                                   </div>
+                                                </a>
                                           </div>
                                        </div>
                                       
@@ -246,16 +260,16 @@
                                     </div>
                                     <div class="row d-lg-none h-auto">
                                        <div class="col-md-12">
-                                          <a class="dropdown-item border-radius-md text-center" href="">
+                                          <a class="dropdown-item border-radius-md text-center" href="{% url 'inbox' %}">
                                              <div class="d-flex align-items-center text-dark">
-                                                <i class="material-icons opacity-6 me-2 text-md">widgets</i>
-                                                Add new event
+                                                <i class="material-icons opacity-6 me-2 text-md">message</i>
+                                                Inbox
                                              </div>
                                           </a>
-                                          <a class="dropdown-item border-radius-md text-center" href="">
+                                          <a class="dropdown-item border-radius-md text-center" href="{% url 'guardian_home' %}">
                                              <div class="d-flex align-items-center text-dark">
                                                    <i class="material-icons opacity-6 me-2 text-md">widgets</i>
-                                                   Dashboard
+                                                   Students
                                              </div>
                                           </a>
                                           <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
@@ -297,6 +311,47 @@
 
 
     {% endblock %}
+
+    <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Conversation</h5>
+        <button type="button" class="btn text-reset" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa fa-close"></i></button>
+      </div>
+      <div class="offcanvas-body">
+          <div class="card h-100">
+              <div class="card-body p-3">
+                 <ul class="list-group">
+                      {% for info in groups_info %}
+                          {% for member in info.other_members %}
+                              
+                                  <li class=" member list-group-item border-0 d-flex align-items-center px-0 mb-2 border-bottom" 
+                                  data-group-id="{{ info.group.id }}" 
+                                  data-group-name="{{ info.group.group_name }}">
+                    
+                                      <div class="avatar me-3">
+                                          <img src="/static/images/default_avatar.png" alt="kal" class="border-radius-lg shadow avatar-sm">
+                                      </div>
+                                      <div class="d-flex align-items-start flex-column justify-content-center">
+                                          {% for member in info.other_members %}
+                                          <h6 class="mb-0 text-md">{{ member.first_name }} {{ member.last_name }}</h6>
+                                          {% endfor %}
+                                          <p class="mb-0 text-sm text-dark">{{ info.last_message }}</p>
+                                      </div>
+                                      <a class="btn btn-link pe-3 ps-0 mb-0 ms-auto text-info" href="{% url 'chatroom' info.group.group_name%}">Reply</a>
+                               
+                                  </li>
+  
+                          {% endfor %}
+  
+                      {% empty %}
+                      <p class="text-center">No Conversations found!</p>
+                      {% endfor %}
+  
+                 </ul>
+              </div>
+           </div>
+      </div>
+  </div>
 
 
 

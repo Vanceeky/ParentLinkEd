@@ -64,9 +64,11 @@ urlpatterns = [
     path('guardian/home/', guardian_home, name="guardian_home"),
     path('guardian/student/<student_id>/', guardian_student_profile, name="guardian_student_profile"),
 
-    
+    path('offline/', views.offline, name='offline'),
+    path('manifest.json', views.manifest, name='manifest'),
     # other URL patterns
 ]
 
 
-urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('base.urls')),
     path('', include('authentication.urls')),
     path('', include('chat.urls')),
+    path('', include('pwa.urls')),
 ]

@@ -1,0 +1,49 @@
+{
+    "name": "ParentLinkED",
+    "short_name": "ParentLinkED",
+    "description": "La Salette Parent-Child Portal",
+    "theme_color": "#0A0302",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "scope": "/",
+    "orientation": "any",
+    "start_url": "/",
+    "status_bar_color": "default",
+    "icons": [
+      {
+        "src": "/static/assets/img/logo_la_sallete.png",
+        "sizes": "160x160",
+        "type": "image/png"
+      }
+    ],
+    "icons_apple": [
+      {
+        "src": "/static/assets/img/logo_la_sallete.png",
+        "sizes": "160x160",
+        "type": "image/png"
+      }
+    ],
+    "splash_screens": [
+      {
+        "src": "/static/images/icons/splash-640x1136.png",
+        "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+      }
+    ],
+    "dir": "ltr",
+    "lang": "en-US",
+    "shortcuts": [
+      {
+        "name": "Shortcut",
+        "url": "/",
+        "description": "Shortcut to ParentLinkED"
+      }
+    ],
+    "screenshots": [
+      {
+        "src": "/static/assets/img/logo_la_sallete.png",
+        "sizes": "750x1334",
+        "type": "image/png"
+      }
+    ]
+  }
+  

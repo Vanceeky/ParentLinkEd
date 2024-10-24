@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-a$u8(i$b*v!tn(+ces)w-#@dqn1%!&v2!e*67cv6+6adkel!+3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.7', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'daphne',
     'jazzmin',
     'ckeditor',
+    'pwa',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -148,6 +149,7 @@ MEDIA_URL = '/images/'
 
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -155,3 +157,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
