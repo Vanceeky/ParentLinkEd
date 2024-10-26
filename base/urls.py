@@ -15,6 +15,7 @@ urlpatterns = [
     path('add-feed/', views.add_feed, name='add_feed'),
 
     path('upcoming-events/', views.upcoming_events, name='upcoming_events'),
+    path('add-event/', views.add_event, name='add_event'),
     path('update-event/<int:event_id>/', views.update_event, name='update_event'),
     path('delete-event/<int:event_id>/', views.delete_event, name='delete_event'),
 
@@ -39,6 +40,7 @@ urlpatterns = [
     path('add-student/', views.add_student, name='add_student'),
 
     path('section/<slug:section_slug>/', views.section_detail, name='section_detail'),
+    path('add-section/', views.add_section, name="add_section"),
 
 
     path('search-instructor/', views.instructor_autocomplete, name='search-instructor'),

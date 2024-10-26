@@ -29,7 +29,7 @@
   <link href="/static/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="/static/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <script src="/static/assets/js/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
@@ -37,7 +37,8 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <link href="/static/assets/css/quill.snow.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
+
+  <link rel="stylesheet" href="/static/assets/css/splide.min.css">
 
   <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
 
@@ -217,9 +218,74 @@
                         
                            {% elif group.name == 'registrar' %}
 
+                           
+                           <li class="nav-item dropdown dropdown-hover mx-2 h-auto">
+                              <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuBlocks" data-bs-toggle="dropdown" aria-expanded="false">
+                              Account
+                              <img src=" /static/assets/img/down-arrow-dark.svg " alt="down-arrow" class="arrow ms-1 d-lg-block d-none">
+                              <img src="/static/assets/img/down-arrow-dark.svg" alt="down-arrow" class="arrow ms-1 d-lg-none d-block">
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-animation dropdown-md dropdown-md-responsive border-radius-lg mt-0 mt-lg-3 dropdown-menu-end h-auto"  aria-labelledby="dropdownMenuBlocks">     
+                                 <div class="d-none d-lg-block">
+                                    <ul class="list-group">
+                                       <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                          <a class="dropdown-item border-radius-md  text-center" type="button" data-bs-toggle="modal" data-bs-target="#event-modal">
+                                             <div class="d-flex justify-content-center align-items-center text-dark text-center">
+                                                <i class="fa fa-plus opacity-6 me-2 text-md"></i>
+                                                Add new event
+                                             </div>
+                                          </a>
+                                       </li>
+                                       <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                          <a class="dropdown-item border-radius-md  text-center" href="{% url 'admin_dashboard' %}">
+                                             <div class="d-flex justify-content-center align-items-center text-dark text-center">
+                                                <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                                Dashboard
+                                             </div>
+                                          </a>
+                                       </li>
+                                       <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                          <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
+                                             <div class="d-flex justify-content-center  align-items-center text-danger">
+                                                <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
+                                                Sign out
+                                             </div>
+                                          </a>
+                                       </li>
+
+   
+                                    </ul>
+                                 </div>
+                                 <div class="row d-lg-none h-auto">
+                                    <div class="col-md-12">
+                                       <a class="dropdown-item border-radius-md text-center" type="button" data-bs-toggle="modal" data-bs-target="#event-modal">
+                                          <div class="d-flex align-items-center text-dark">
+                                                <i class="fa fa-plus opacity-6 me-2 text-md"></i>
+                                                Add new event
+                                          </div>
+                                       </a>
+                                       <a class="dropdown-item border-radius-md text-center" href="{% url 'admin_dashboard' %}">
+                                          <div class="d-flex align-items-center text-dark">
+                                                <i class="material-icons opacity-6 me-2 text-md">widgets</i>
+                                                Dashboard
+                                          </div>
+                                       </a>
+                                       <a class="dropdown-item border-radius-md" href="{% url 'logout-account' %}">
+                                          <div class="d-flex  align-items-center text-danger">
+                                                <i class="fa fa-sign-out opacity-6 me-2 text-md"></i>
+                                                Sign out
+                                          </div>
+                                       </a>
+                                    </div>
+                                 </div>
+                              
+                              </div>
+                           </li>
                       
 
                            {% elif group.name == 'guardian' %}
+
+
 
                               <li class="nav-item dropdown dropdown-hover mx-2 h-auto">
                                  <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuBlocks" data-bs-toggle="dropdown" aria-expanded="false">
@@ -284,7 +350,11 @@
                                  </div>
                               </li>
 
+       
+
                            {% endif %}
+
+
 
 
                            {% endfor %}
@@ -351,7 +421,42 @@
               </div>
            </div>
       </div>
-  </div>
+   </div>
+
+   <!-- Modal -->
+<div class="modal fade" id="event-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-md modal-dialog-centered modal-sm" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Add new Event</h5>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <form method='POST' action="{% url 'add_event' %}" id="add-event-form" >
+         {% csrf_token %}
+         <div class="modal-body">
+            <div class="input-group input-group-outline mb-4">
+               <input type="text" class="form-control" name="title" required placeholder="Title...">
+            </div>
+
+            <div class="input-group input-group-dynamic">
+               <textarea class="form-control" rows="1" name="description" required placeholder="Event Description..." spellcheck="false"></textarea>
+            </div>
+
+            <div class="input-group input-group-static my-3">
+               <label>Date</label>
+               <input type="date" name="date" class="form-control">
+            </div>
+
+         </div>
+         <div class="modal-footer">
+            <button type="submit" class="btn bg-gradient-info">Add event</button>
+         </div>
+      </form>
+     </div>
+   </div>
+ </div>
 
 
 
@@ -364,6 +469,41 @@
 
   {% endblock %}
 
+  <script>
+   $(document).ready(function() {
+       $('#add-event-form').on('submit', function(e) {
+           e.preventDefault(); 
+
+           $.ajax({
+               type: 'POST',
+               url: $(this).attr('action'),
+               data: $(this).serialize(),  
+               success: function(response) {
+               
+                   Swal.fire({
+                       icon: response.status === 'success' ? 'success' : 'error',
+                       title: response.message,
+                       showConfirmButton: true,
+                   });
+                  
+                   if (response.status === 'success') {
+                       $('#add-event-form')[0].reset();
+                       setTimeout(function() {
+                           window.location.href = '{% url "upcoming_events" %}';
+                       }, 1500);
+                   }
+               },
+               error: function() {
+                   Swal.fire({
+                       icon: 'error',
+                       title: 'An unexpected error occurred.',
+                       showConfirmButton: true,
+                   });
+               }
+           });
+       });
+   });
+</script>
 
 
 

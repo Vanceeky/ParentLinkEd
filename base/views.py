@@ -1,5 +1,5 @@
 from collections import defaultdict
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from . models import *
 from django.db.models import Q
 from django.http import JsonResponse
@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import random
 import string
 from django.core.mail import send_mail
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.contrib.auth.models import Group 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -35,6 +35,7 @@ def feed(request):
         'posts': posts
     }
     return render(request, 'base/feed.html', context)
+
 
 def add_feed(request):
     try:
@@ -65,31 +66,7 @@ def add_feed(request):
             'message': f'Error creating feed: {str(e)}'
         }
         return JsonResponse(response_data, status=400)
-    
-def upcoming_events(request):
-    # Get the current date
-    today = timezone.now().date()
-    
-    # Define the end date (e.g., 3 months from today)
-    end_date = today + timedelta(days=90)
 
-    # Filter events that are happening from today up to the end date
-    events = Event.objects.filter(date__range=[today, end_date]).order_by('date')
-
-    # Check if the request is an AJAX request
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        # Prepare the event data
-        event_data = [
-            {
-                'id': event.id,
-                'title': event.title,
-                'description': event.description,
-                'date': event.date.strftime('%Y-%m-%d')  # Format the date as a string
-            } for event in events
-        ]
-        return JsonResponse(event_data, safe=False)
-
-    return render(request, 'base/upcoming_events.html')
 
 @csrf_exempt
 def update_event(request, event_id):
@@ -117,6 +94,53 @@ def delete_event(request, event_id):
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+def upcoming_events(request):
+    # Get the current date
+    today = timezone.now().date()
+    
+    # Define the end date (e.g., 3 months from today)
+    end_date = today + timedelta(days=90)
+
+    # Filter events that are happening from today up to the end date
+    events = Event.objects.filter(date__range=[today, end_date]).order_by('date')
+
+    # Check if the request is an AJAX request
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Prepare the event data
+        event_data = [
+            {
+                'id': event.id,
+                'title': event.title,
+                'description': event.description,
+                'date': event.date.strftime('%Y-%m-%d')  # Format the date as a string
+            } for event in events
+        ]
+        return JsonResponse(event_data, safe=False)
+
+    return render(request, 'base/upcoming_events.html')
+
+def add_event(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        date = request.POST.get('date')
+
+        # Check if an event with the same title and date already exists
+        if Event.objects.filter(title=title, date=date).exists():
+            return JsonResponse({'status': 'error', 'message': 'Event with the same title and date already exists.'})
+
+        # Create the event since no duplicate was found
+        event = Event.objects.create(
+            title=title,
+            description=description,
+            date=date
+        )
+        event.save()
+
+        # Return success response
+        return JsonResponse({'status': 'success', 'message': 'Event added successfully!'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
 @login_required
@@ -125,11 +149,14 @@ def admin_dashboard(request):
     students = Student.objects.all()
     guardians = Guardian.objects.all()
     subjects = Subject.objects.all()
+    grouped_sections = get_grouped_sections()
+
     context = {
         'instructors': instructors,
         'students': students,
         'guardians': guardians,
         'subjects': subjects, 
+        'grouped_sections': grouped_sections
     }
     return render(request, 'base/admin/dashboard.html', context)
 
@@ -387,6 +414,23 @@ def section_detail(request, section_slug):
         'grouped_sections': grouped_sections
     }
     return render(request, 'base/admin/sections.html', context)
+
+
+def add_section(request):
+    if request.method == 'POST':
+        year_level = request.POST.get('year')
+        section = request.POST.get('section')
+
+        yls = YearLevelSection.objects.create(
+            year_level=year_level,
+            section=section
+        )
+
+        yls.save()
+
+        
+        
+        return redirect('section_detail', yls.slug)
 
 
 

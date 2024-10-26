@@ -23,7 +23,7 @@
                 </button>
             </div>
             <div class="table-responsive">
-              <table class="table align-items-center mb-0 mt-0">
+              <table class="table align-items-center mb-0 mt-0" id="instructor_table">
                 <thead>
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
@@ -157,7 +157,15 @@
 
 
 <!-- SweetAlert2 and AJAX Script -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/static/assets/js/sweet_alert.js"></script>
+
+<script>
+
+
+  let table = new DataTable('#instructor_table')
+</script>
+
+
 <script>
   document.getElementById('add_instructor_form').addEventListener('submit', function(e) {
     e.preventDefault(); 

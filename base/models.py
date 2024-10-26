@@ -76,7 +76,6 @@ class YearLevelSection(models.Model):
             self.slug = slugify(f"{self.year_level}: {self.section}")
         super().save(*args, **kwargs)
     
-    
 
 
 
@@ -92,7 +91,7 @@ class Student(models.Model):
     gender = models.CharField(max_length=10, null = True, blank = True)
     age = models.IntegerField(null = True, blank = True)
 
-    year_level_section = models.ForeignKey(YearLevelSection, on_delete=models.CASCADE)
+    year_level_section = models.ForeignKey(YearLevelSection, on_delete=models.CASCADE, null=True, blank=True)
 
     date_created = models.DateTimeField(auto_now_add=True, null = True, blank = True)
 

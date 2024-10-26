@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} Instructors {% endblock %}
+{% block title %} List of Students {% endblock %}
 
 
 {% block stylesheet %}
@@ -54,6 +54,7 @@
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Guardian</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Year Level / Section</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -89,8 +90,13 @@
                             <p class="text-sm text-secondary mb-0">{{ guard.address }}</p>
                             {% endfor %}
                         </td>
+                        
                         <td class="align-middle text-center">
                             <span class="text-secondary text-sm font-weight-normal"><a href="{% url 'section_detail' student.year_level_section.slug %}">{{ student.year_level_section}}</a></span>
+                        </td>
+
+                        <td class="">
+                          <span class="text-secondary text-sm font-weight-normal"><a href=""><i class="fa fa-edit"></i></a></span>
                         </td>
 
                     </tr>
@@ -229,7 +235,7 @@
 
 {% block js %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -333,12 +339,14 @@ profileImageDisplay.addEventListener('click', function() {
 
 
 
-<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
-
 <script>
     let table = new DataTable('#student_table');
 
 </script>
+
+
+
+  
 
 
 {% endblock %}

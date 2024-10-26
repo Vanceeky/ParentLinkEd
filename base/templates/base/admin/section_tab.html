@@ -8,7 +8,7 @@
              
                  
 
-                 <a href="" type="button" data-bs-toggle="modal" data-bs-target="#add_new_instructor" class="bg-gradient-success avatar avatar-sm text-white"><i class="fa fa-plus"></i></a>
+                 <a href="" type="button" data-bs-toggle="modal" data-bs-target="#add-section" class="bg-gradient-success avatar avatar-sm text-white"><i class="fa fa-plus"></i></a>
            
 
            </div>
@@ -56,3 +56,67 @@
 
 
 
+<!-- Modal -->
+<div class="modal fade" id="add-section" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add Year Level and Section</h5>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form method="POST" action="{% url 'add_section' %}">
+            {% csrf_token %}
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="input-group input-group-static mb-4">
+                            <label for="exampleFormControlSelect1" class="ms-0">Select Year: </label>
+                            <select class="form-control" id="" name="year">
+                                <option>.............</option>
+                            <option value="Grade 1">Grade 1</option>
+                            <option value="Grade 2">Grade 2</option>
+                            <option value="Grade 3">Grade 3</option>
+                            <option value="Grade 4">Grade 4</option>
+                            <option value="Grade 5">Grade 5</option>
+                            <option value="Grade 6">Grade 6</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mt-1">
+                        <div class="input-group input-group-outline my-3">
+                            <input type="text" name="section" placeholder="Section Name..." class="form-control">
+                        </div>
+                    </div>
+
+
+
+                
+                </div>
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+            <button type="submit" class="btn bg-gradient-info">Save</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+  

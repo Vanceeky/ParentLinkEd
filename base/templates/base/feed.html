@@ -82,7 +82,7 @@
              </div>
              {% if request.user.is_authenticated %}
               {% for group in request.user.groups.all %}
-                  {% if group.name == 'instructor' or group.name == 'registrar' %}
+                  {% if group.name == 'instructor'%}
                   <div class="">
                       <div id="announcement" class="card shadow p-2 mb-5 bg-body rounded button-like">
                           <div class="d-flex px-2 py-1">
