@@ -166,41 +166,41 @@
                                 </thead>
                                 <tbody>
                                     {% for subject in subjects %}
-                                    <tr>
-                                        <td><p class="text-md font-weight-bold mb-0">{{ subject.name }}</p></td>
-                                        
-                                
-                                            {% for g in grades %}
-                                                {% if g.subject.id == subject.id %}
-                                                    <td class="align-middle text-center">
-                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_1|default:0 }}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_2|default:0 }}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_3|default:0 }}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_4|default:0 }}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.final_grade|default:0 }}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="btn bg-gradient-success text-md p-1">{{ g.remarks|default:"-" }}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <a href="" type="button" data-bs-toggle="modal" data-bs-target="#update-grade-modal" class="text-success"> 
-                                                            <i class="fa fa-edit me-2"></i>Update
-                                                        </a>
-                                                    </td>
-                                              
-                                                {% endif %}
-                                            {% endfor %}
+                                        <tr>
+                                            <td><p class="text-md font-weight-bold mb-0">{{ subject.name }}</p></td>
+                                            
+                                    
+                                                {% for g in grades %}
+                                                    {% if g.subject.id == subject.id %}
+                                                        <td class="align-middle text-center">
+                                                            <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_1|default:0 }}</span>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_2|default:0 }}</span>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_3|default:0 }}</span>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <span class="btn bg-gradient-success text-md p-1">{{ g.quarter_4|default:0 }}</span>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <span class="btn bg-gradient-success text-md p-1">{{ g.final_grade|default:0 }}</span>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <span class="btn bg-gradient-success text-md p-1">{{ g.remarks|default:"-" }}</span>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <a href="" type="button" data-bs-toggle="modal" data-bs-target="#update-grade-modal" class="text-success" data-subject-id="{{ subject.id }}">  
+                                                                <i class="fa fa-edit me-2"></i>Update
+                                                            </a>
+                                                        </td>
+                                                
+                                                    {% endif %}
+                                                {% endfor %}
 
-                                    </tr>
-                                {% endfor %}
+                                        </tr>
+                                    {% endfor %}
                                 
                                 
                                 </tbody>
@@ -397,12 +397,52 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn bg-gradient-info">Save changes</button>
-        </div>
+        <form method="POST"  id="update-grade-form" action="{% url 'update_grade' %}">
+            <input type="hidden" name="student_id" value="{{student.id}}">
+            <input type="hidden" name="subject_id" id="subject-id-field">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group input-group-outline my-3">
+                            <input type="text" name="subject" class="form-control" disabled>
+                        </div>
+                    </div>
+            
+                    <!-- 1st Quarter -->
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <input type="number" name="1st" class="form-control" id="quarter1">
+                        </div>
+                    </div>
+            
+                    <!-- 2nd Quarter -->
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <input type="number" name="2nd" class="form-control" id="quarter2">
+                        </div>
+                    </div>
+            
+                    <!-- 3rd Quarter -->
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <input type="number" name="3rd" class="form-control" id="quarter3">
+                        </div>
+                    </div>
+            
+                    <!-- 4th Quarter -->
+                    <div class="col-md-3 col-6">
+                        <div class="input-group input-group-outline my-3">
+                            <input type="number" name="4th" class="form-control" id="quarter4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+            <button type="submit" class="btn bg-gradient-info">Save changes</button>
+            </div>
+        </form>
       </div>
     </div>
 </div>
@@ -412,6 +452,89 @@
 
 
 {% block js %}
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("update-grade-form");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const formData = new FormData(form);  // Collect form data
+
+            fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success alert and reload the page
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                        confirmButtonText: 'OK',
+                        timer: 2000
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    // Show error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: "An unexpected error occurred.",
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const updateButtons = document.querySelectorAll(".text-success");
+
+        updateButtons.forEach(button => {
+            button.addEventListener("click", function(event) {
+                const row = event.target.closest("tr");
+
+                // Get subject ID from the button's data attribute
+                const subjectId = event.target.closest("a").getAttribute("data-subject-id");
+
+                // Get subject name and grades from the row
+                const subjectName = row.querySelector("td:first-child p").textContent;
+                const quarter1 = row.querySelector("td:nth-child(2) span").textContent;
+                const quarter2 = row.querySelector("td:nth-child(3) span").textContent;
+                const quarter3 = row.querySelector("td:nth-child(4) span").textContent;
+                const quarter4 = row.querySelector("td:nth-child(5) span").textContent;
+
+                // Set values in the modal
+                document.querySelector("#update-grade-modal input[name='subject']").value = subjectName;
+                document.querySelector("#update-grade-modal input[name='1st']").value = quarter1;
+                document.querySelector("#update-grade-modal input[name='2nd']").value = quarter2;
+                document.querySelector("#update-grade-modal input[name='3rd']").value = quarter3;
+                document.querySelector("#update-grade-modal input[name='4th']").value = quarter4;
+                document.querySelector("#subject-id-field").value = subjectId;  // Set the subject ID
+            });
+        });
+    });
+</script>
+
 <script>
     document.getElementById('add-grade-form').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the form from submitting the traditional way

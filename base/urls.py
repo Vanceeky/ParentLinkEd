@@ -59,6 +59,7 @@ urlpatterns = [
     path('instructor/create-announcement/', create_announcement, name="create_announcement"),
     path('instructor/record-attendance/', record_attendance, name="record_attendance"),
     path('add-grade/', add_grade, name='add_grade'),
+    path('update-grade/', update_grade, name="update_grade"),
     path('complete-reminder/<int:reminder_id>/', complete_reminder, name="complete_reminder"),
  
     

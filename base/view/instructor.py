@@ -295,6 +295,45 @@ def add_grade(request):
     return JsonResponse({'success': False, 'message': "Invalid request method."}, status=400)
 
 
+def update_grade(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        subject_id = request.POST.get('subject_id')
+        quarter_1 = request.POST.get('1st')
+        quarter_2 = request.POST.get('2nd')
+        quarter_3 = request.POST.get('3rd')
+        quarter_4 = request.POST.get('4th')
+
+        try:
+            # Retrieve the Grade instance for the student and subject
+            grade = Grade.objects.get(student_id=student_id, subject_id=subject_id)
+
+            # Ensure each quarter is filled sequentially
+            if quarter_2 and not grade.quarter_1:
+                return JsonResponse({'success': False, 'message': "Please enter a grade for the 1st Quarter before adding the 2nd Quarter."}, status=400)
+            if quarter_3 and not grade.quarter_2:
+                return JsonResponse({'success': False, 'message': "Please enter a grade for the 2nd Quarter before adding the 3rd Quarter."}, status=400)
+            if quarter_4 and not grade.quarter_3:
+                return JsonResponse({'success': False, 'message': "Please enter a grade for the 3rd Quarter before adding the 4th Quarter."}, status=400)
+
+            # Update grades if present in the request
+            grade.quarter_1 = float(quarter_1) if quarter_1 else grade.quarter_1
+            grade.quarter_2 = float(quarter_2) if quarter_2 else grade.quarter_2
+            grade.quarter_3 = float(quarter_3) if quarter_3 else grade.quarter_3
+            grade.quarter_4 = float(quarter_4) if quarter_4 else grade.quarter_4
+            grade.save()
+
+            return JsonResponse({'success': True, 'message': "Grade updated successfully."})
+
+        except ValueError as ve:
+            return JsonResponse({'success': False, 'message': "Invalid grade value: " + str(ve)}, status=400)
+        except Grade.DoesNotExist:
+            return JsonResponse({'success': False, 'message': "Grade record not found for the specified student and subject."}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': "An error occurred while updating the grade: " + str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'message': "Invalid request method."}, status=400)
+
 
 
 def get_user_groups(user):
@@ -338,4 +377,6 @@ def get_user_groups(user):
         })
 
     return groups_with_last_message
+
+
 
