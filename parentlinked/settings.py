@@ -156,6 +156,21 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'lnuinfirmary@gmail.com'
+EMAIL_HOST_PASSWORD = 'horv aysg yjoj noul'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 
+JAZZMIN_SETTINGS = {
+    "site_title": "ParentLinkED",
+    "site_header": "ParentLinkED",
+    "site_logo": "/assets/img/logo_la_sallete.png",
+    "welcome_sign": "Welcome to ParentLinkED Admin",
+    "site_logo_classes": "img-circle",
+    "favicon": "/assets/img/logo_la_sallete.png",
+
+}

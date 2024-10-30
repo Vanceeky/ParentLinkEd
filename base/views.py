@@ -431,6 +431,7 @@ def add_section(request):
         
         
         return redirect('section_detail', yls.slug)
+    
 
 
 

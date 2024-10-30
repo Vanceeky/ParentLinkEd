@@ -171,6 +171,7 @@ class Announcement(models.Model):
             return Student.objects.all()
         return self.selected_students.all()
     
+    
 class Attendance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='attendances')
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='attendances')

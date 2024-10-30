@@ -24,3 +24,5 @@ class FeedImageInline(admin.TabularInline):
 class FeedAdmin(admin.ModelAdmin):
     list_display = ('author', 'title', 'created_at')
     inlines = [FeedImageInline]
+
+

@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 
 from base.view.instructor import *
 from base.view.guardian import *
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -49,6 +50,8 @@ urlpatterns = [
 
 
     # INTRUCTORS URLS
+    path('instructor/', profile, name="instructor_profile"),
+    path('instructor/edit-profile/', update_profile, name="update_profile"),
     path('instructor/home/', instructor_home, name="instructor_home"),
     path('instructor/teaching-subject/<slug:slug>/', subject_details, name="subject_details"),
     path('instructor/inbox/', inbox_page, name="inbox_page"),
@@ -65,11 +68,22 @@ urlpatterns = [
     
     # GUARDIAN URLS
     path('guardian/home/', guardian_home, name="guardian_home"),
+    path('guardian/profile/', guardian_profile, name="guardian_profile"),
     path('guardian/student/<student_id>/', guardian_student_profile, name="guardian_student_profile"),
+    path('guardian/update-avatar/<student_id>/', update_avatar, name="update_avatar"),
+    path('guardian/update-info/', update_guardian, name="update_guardian"),
+    path('announcements/', guardian_announcements, name="guardian_announcements"),
+
 
     path('offline/', views.offline, name='offline'),
     path('manifest.json', views.manifest, name='manifest'),
     # other URL patterns
+
+        # Password reset URLs
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 
 

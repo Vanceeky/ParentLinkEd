@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+
 <section class="py-5 mt-8">
     <div class="container">
       <div class="row">
@@ -15,42 +16,115 @@
           <div class="icon icon-shape icon-md bg-gradient-success shadow text-center mb-3">
             <i class="material-icons opacity-10">supervisor_account</i>
           </div>
+          
           <h3>Students Under My Care</h3>
           <p>Welcome to <span class="text-bold">ParentLinkED</span> La Salette School Parent-Child Portal
+ 
+            <div id="alert-container" class="alert alert-success text-white" role="alert" style="display: none;">
+            </div>
+            
         </div>
+
       </div>
       <div class="row mt-5">
+        
         {% for stud in students %}
-
         <div class="col-lg-4 col-sm-6 mb-6">
-            <div class="card card-body">
-              <div class="row">
-                <div class="col-lg-5 text-end my-auto">
-                  <img class="avatar avatar-xxl border-radius-lg mt-n5" src="{{ stud.avatar.url }}">
-                </div>
-                <div class="col-lg-7">
-                  <h4 class="mb-2 text-capitalize"><a href="{% url 'guardian_student_profile' stud.student_id %}" class="text-info text-gradient">{{ stud.firstname }} {{ stud.lastname}}</a></h4>
-                  <span class="text-dark">{{ stud.year_level_section}}</span>
-
-                </div>
+          <div class="card card-body">
+            <div class="row">
+              <div class="col-lg-5 text-end my-auto">
+                <form enctype="multipart/form-data" id="avatar-form-{{ stud.id }}">
+                  {% csrf_token %}
+                  <input type="file" name="avatar" id="avatar-input-{{ stud.id }}" style="display: none;" 
+                         onchange="previewImage('{{ stud.id }}')" accept="image/*">
+                  <a href="javascript:void(0);" onclick="document.getElementById('avatar-input-{{ stud.id }}').click();">
+                      <img class="avatar avatar-xxl border-radius-lg mt-n5" src="{{ stud.avatar.url }}" id="avatar-preview-{{ stud.id }}">
+                  </a>
+                </form>
+              </div>
+              <div class="col-lg-7">
+                <button class="btn btn-sm btn-outline-info" id="save-button-{{ stud.id }}" style="display: none;" onclick="saveAvatar('{{ stud.id }}')">Save</button>
+                <h4 class="mb-2 text-capitalize"><a href="{% url 'guardian_student_profile' stud.student_id %}" class="text-info text-gradient">{{ stud.firstname }} {{ stud.lastname}}</a></h4>
+                <span class="text-dark">{{ stud.year_level_section }}</span>
               </div>
             </div>
+          </div>
         </div>
-
-
-        {% empty %}
-
-        <p> No student </p>
-        {% endfor %}
+      {% empty %}
+        <p>No student</p>
+      {% endfor %}
 
       </div>
     </div>
-  </section>
+</section>
 
   
 {% endblock %}
 
 {% block js %}
 
+<script>
 
+  function previewImage(studentId) {
+    const fileInput = document.getElementById(`avatar-input-${studentId}`);
+    const previewImage = document.getElementById(`avatar-preview-${studentId}`);
+    const saveButton = document.getElementById(`save-button-${studentId}`);
+
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // Preview the selected image
+            previewImage.src = e.target.result;
+            saveButton.style.display = 'block';  // Show the save button
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+function saveAvatar(studentId) {
+    const fileInput = document.getElementById(`avatar-input-${studentId}`);
+    const saveButton = document.getElementById(`save-button-${studentId}`);
+    const formData = new FormData();
+    
+    if (fileInput.files && fileInput.files[0]) {
+        formData.append('avatar', fileInput.files[0]);
+
+        const url = `/guardian/update-avatar/${studentId}/`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('Avatar updated successfully!', 'success');
+                saveButton.style.display = 'none'; // Hide the save button after saving
+            } else {
+                showAlert(data.error, 'danger');
+            }
+        })
+        .catch(error => {
+            showAlert('An error occurred while uploading the avatar.', 'danger');
+            console.error(error);
+        });
+    }
+}
+
+function showAlert(message, type) {
+    const alertContainer = document.getElementById('alert-container');
+    alertContainer.className = `alert alert-${type} text-white`;
+    alertContainer.innerText = message;
+    alertContainer.style.display = 'block';  // Show the alert container
+
+    // Remove the alert after 3 seconds
+    setTimeout(() => {
+        alertContainer.style.display = 'none';  // Hide the alert container
+        alertContainer.innerText = '';  // Clear the message
+    }, 3000);
+}
+</script>
 {% endblock %}

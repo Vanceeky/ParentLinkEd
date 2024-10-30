@@ -1,0 +1,206 @@
+{% extends 'base/layout.html' %}
+
+{% block title %} {{ guardian.user.first_name }} {{ guardian.user.last_name }} {% endblock %}
+
+
+{% block stylesheet %}
+
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5 mt-8">
+
+    <div class="container mb-0">
+        <form id="updateProfileForm" method="POST" action="{% url 'update_guardian' %}" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <input type="hidden" name="guardian_id" value="{{ guardian.id }}">
+        
+
+            <div class="row">
+
+            <div class="col-md-3">
+                <div class="section p-3">
+                <!-- User Information -->
+                <section class="text-center">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                            <div id="profile-pic-container" class="mb-3">
+                                <img id="profile-pic" src="{{ guardian.avatar.url }}" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px;">
+                            </div>
+                            <div class="mb-3">
+                                <input type="file" id="file-input" name="avatar" class="d-none" accept="image/*">
+                                <button id="change-profile-btn" type="button" class="btn btn-sm btn-secondary">Change Profile</button>
+                                
+                            </div>
+
+                        </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail img-circle img-raised"></div>
+                    
+                    </div>
+                    <h3 class="title mt-4 text-capitalize">{{ guardian.user.first_name }} {{ guardian.user.last_name }}</h3>
+                </section>
+
+
+                </div>
+            </div>
+            <div class="col-md-8 ml-auto p-3">
+                <div class="section">
+
+                    <div>
+                        <header class="border-bottom">
+                        <h2 class="text-uppercase">Account information</h2>
+                        </header>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-3 align-self-center">
+                                <label class="labels" for="#firstName">Guardian ID</label>
+                            </div>
+                            <div class="col-md-9 align-self-center">
+                                <div class="input-group input-group-outline mb-4">
+                                    <input type="text" value="{{ guardian.user.id }}" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 align-self-center">
+                                <label class="labels" for="#firstName">First Name</label>
+                            </div>
+                            <div class="col-md-9 align-self-center">
+                                <div class="input-group input-group-outline mb-4">
+                                    <input type="text" value="{{ guardian.user.first_name }}" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 align-self-center">
+                                <label class="labels" for="#lastName">Last Name</label>
+                            </div>
+                            <div class="col-md-9 align-self-center">
+                                <div class="input-group input-group-outline mb-4">
+                                    <input type="text" value="{{ guardian.user.last_name }}" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 align-self-center">
+                                <label class="labels" for="#email">Email</label>
+                            </div>
+                            <div class="col-md-9 align-self-center">
+                                <div class="input-group input-group-outline mb-4">
+                                    <input type="email" name="email" value="{{ guardian.user.email }}" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                        <div class="col-md-3 align-self-center">
+                            <label class="labels" for="#location">Your Location</label>
+                        </div>
+                        <div class="col-md-9 align-self-center">
+                                <div class="input-group input-group-outline mb-4">
+                                    <input type="text" name="address" value="{{ guardian.address }}" class="form-control">
+                                </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 align-self-center">
+                                <label class="labels" for="#phone">Phone Number</label>
+                            </div>
+                            <div class="col-md-4 align-self-center">
+                                <div class="input-group input-group-outline mb-4">
+                                    <input type="text" name="contact_number" value="{{ guardian.contact_number }}" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-md-6">
+                                <button class="btn btn-info" type="submit">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+            
+
+                </div>
+                </div>
+            </div>
+
+            </div>
+
+        </form>
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block js %}
+
+
+<script>
+    document.getElementById('updateProfileForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+
+        const formData = new FormData(this); // Collect form data
+
+        fetch("{% url 'update_guardian' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}' // CSRF token for security
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Profile Updated',
+                    text: 'Your profile has been updated successfully!',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'An error occurred while updating the profile.',
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred. Please try again later.',
+            });
+        });
+    });
+</script>
+
+
+<script>
+    document.getElementById('change-profile-btn').addEventListener('click', function() {
+        document.getElementById('file-input').click();
+    });
+
+    document.getElementById('file-input').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-pic').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+
+{% endblock %}

@@ -7,7 +7,8 @@ from django.http import JsonResponse, HttpResponse
 import datetime
 from chat.models import ChatGroup
 from django.contrib import messages
-
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 
 
 def get_user_chat_groups(user):
@@ -379,4 +380,64 @@ def get_user_groups(user):
     return groups_with_last_message
 
 
+
+
+
+def profile(request):
+    acc = Instructor.objects.get(user=request.user)
+
+    groups_info = get_user_chat_groups(request.user)  
+
+    year_level_sections = acc.year_level_sections.all().select_related('instructor').prefetch_related('subjects')
+
+    context = {
+        'groups_info': groups_info,
+        'acc': acc,
+        'year_level_sections': year_level_sections
+    }
+    return render(request, 'base/instructor/profile.html', context)
+
+def update_profile(request):
+    if request.method == 'POST':
+        try:
+            instructor_id = request.POST.get('instructor')
+            email = request.POST.get('email')
+            contact_number = request.POST.get('contact_number')
+            address = request.POST.get('address')
+            avatar = request.FILES.get('avatar')
+
+       
+            acc = Instructor.objects.get(id=instructor_id)
+
+        
+          # Check for email duplication
+            if email and email != acc.user.email:
+                if User.objects.filter(email=email).exclude(id=acc.user.id).exists():
+                    return JsonResponse({'success': False, 'error': 'Email already exists'}, status=400)
+
+       
+            acc.user.email = email if email else acc.user.email
+            # Update Instructor fields
+            acc.contact_number = contact_number if contact_number else acc.contact_number
+            acc.address = address if address else acc.address
+
+
+           
+            if avatar:
+                acc.avatar = avatar
+
+            # Save changes
+            acc.user.save()
+            acc.save()
+
+            return JsonResponse({'success': True})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Instructor not found'}, status=404)
+        except IntegrityError:
+            return JsonResponse({'success': False, 'error': 'Failed to update profile due to database error'}, status=500)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 

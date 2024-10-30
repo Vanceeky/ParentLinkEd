@@ -15,21 +15,24 @@
 
 <div class="card shadow-lg mx-4 card-profile-bottom">
     <div class="card-body p-3">
-        <div class="row gx-4">
-            <div class="col-auto">
-                <div class="avatar avatar-xl position-relative">
-                    <img src="{{ instructor.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+        <div class="row gx-4 d-flex justify-content-between align-items-center">
+            <div class="col-12 col-sm-auto d-flex align-items-center mb-3 mb-sm-0">
+                <div class="avatar avatar-xl position-relative me-2">
+                    <img src="{{ instructor.avatar.url }}" alt="profile_image" class="w-100 border-radius-lg avatar-xl shadow-sm">
                 </div>
-            </div>
-            <div class="col-auto my-auto">
                 <div class="h-auto">
-                    <h5 class="mb-1 text-capitalize">
-                        {{ instructor.user.first_name }} {{ instructor.user.last_name}}
-                    </h5>
+                    <h4 class="mb-1 text-capitalize">
+                        {{ instructor.user.first_name }} {{ instructor.user.last_name }}
+                    </h4>
                     <p class="mb-0 font-weight-bold text-sm">
                         {{ instructor.employee_id }}
                     </p>
                 </div>
+            </div>
+            <div class="col-12 col-sm-auto text-start text-sm-end">
+                <button class="btn btn-outline-info w-100 w-sm-auto" data-bs-toggle="modal" data-bs-target="#instructor_information">
+                    View Information
+                </button>
             </div>
         </div>
     </div>
@@ -37,8 +40,10 @@
 
 
 
+
 <div class="row mt-3">
 
+    <!--
     <div class="col-md-4 mt-md-0 mt-1">
 
         <div class=" card h-auto">
@@ -64,13 +69,13 @@
         </div>
 
     </div>
-
-    <div class="col-md-8 mt-md-0 mt-4">
+    -->
+    <div class=" col-12 mt-md-0 mt-1 mt-sm-0">
         <div class="row ">
             {% for section in year_level_sections %}
             {% for subj in section.subjects.all %}
             
-                <div class="col-xl-6 mb-xl-0 mb-1">
+                <div class="col-xl-4 mb-xl-3">
                     <div class="card mb-2 bg-transparent shadow-xl">
                         <div class="overflow-hidden position-relative border-radius-xl">
                             
@@ -113,6 +118,46 @@
 
 
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="instructor_information" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+            
+        <div class="modal-content">
+            
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Instructor Information</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+
+                        
+                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Employee ID:</strong> &nbsp; {{ instructor.employee_id }}</li>
+                        {% for year_level_section in year_level_sections %}
+                            
+                            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Advisory Section:</strong> &nbsp; {{ year_level_section }}</li>
+                        {% endfor %}
+                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Contact Number:</strong> &nbsp; {{ instructor.contact_number }}</li>
+                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ instructor.user.email }}</li>
+                        <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address:</strong> &nbsp; {{ instructor.address }}</li>
+                        
+    
+                    </ul>
+                </div>
+
+                    
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
 
 {% endblock %}
 
