@@ -75,7 +75,14 @@ class YearLevelSection(models.Model):
         if not self.slug:
             self.slug = slugify(f"{self.year_level}: {self.section}")
         super().save(*args, **kwargs)
-    
+
+    def count_subjects(self):
+        """Return the count of subjects associated with this year level section."""
+        return self.subjects.count()
+
+    def count_students(self):
+        """Return the count of students associated with this year level section."""
+        return Student.objects.filter(year_level_section=self).count()
 
 
 
@@ -118,7 +125,7 @@ class Guardian(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.username} - {self.user.first_name} {self.user.last_name}"
+        return f"{self.id } -{self.user.username} - {self.user.first_name} {self.user.last_name}"
 
 
 

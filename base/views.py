@@ -193,10 +193,10 @@ def instructor_detail(request, instructor_id):
 # Subject Views
 @login_required
 def subject_page(request):
-    subjects = Subject.objects.all().prefetch_related('year_level_sections__instructor')
+    #subjects = Subject.objects.all().prefetch_related('year_level_sections__instructor')
     year_level_section = YearLevelSection.objects.all()
     context = {
-        'subjects': subjects,
+       # 'subjects': subjects,
         'year_level_section': year_level_section
     }
     return render(request, 'base/admin/subjects.html', context)
@@ -421,17 +421,23 @@ def add_section(request):
         year_level = request.POST.get('year')
         section = request.POST.get('section')
 
+        # Check if the combination of year_level and section already exists
+        if YearLevelSection.objects.filter(year_level=year_level, section=section).exists():
+            return JsonResponse({'status': 'error', 'message': f'The section {section} for {year_level} already exists.'}, status=400)
+
+        # Create the YearLevelSection instance
         yls = YearLevelSection.objects.create(
             year_level=year_level,
             section=section
         )
 
         yls.save()
+        print(f"Created YearLevelSection: {yls} with slug: {yls.slug}")
 
-        
-        
-        return redirect('section_detail', yls.slug)
-    
+
+        return JsonResponse({'status': 'success', 'message': f'Successfully added section {section} for {year_level}.', 'slug': yls.slug})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
 
 
 
@@ -560,3 +566,4 @@ def add_instructor(request):
 
     # Handle non-POST requests
     return JsonResponse({'error': 'Invalid request method. Please use POST.'}, status=400)
+

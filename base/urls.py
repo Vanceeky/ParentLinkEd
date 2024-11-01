@@ -29,7 +29,7 @@ urlpatterns = [
 
 
 
-    path('subjects/', views.subject_page, name='subject_page'),
+    path('sections/', views.subject_page, name='subject_page'),
     path('add-subject/', views.add_subject, name='add_subject'),
     path('update-subject/', views.update_subject, name='update_subject'),
 
