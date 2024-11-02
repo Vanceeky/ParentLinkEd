@@ -60,46 +60,54 @@
                 <tbody>
                     {% for student in students %}
 
-                    <tr>
-                        <td>
-                        <div class="d-flex px-2 py-1">
-                            <div>
-                            <img src="{{ student.avatar.url }}" class="avatar avatar-sm me-3">
-                            </div>
-                            <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm text-capitalize"><a href="{% url 'student_profile' student.student_id %}">{{ student.firstname }} {{ student.lastname }} ( {{ student.gender }}, {{ student.age}} )</a></h6>
-                            <p class="text-sm text-secondary mb-0">{{ student.student_id }}</p>
-                            </div>
-                        </div>
+                      <tr>
+                          <td>
+                          <div class="d-flex px-2 py-1">
+                              <div>
+                              <img src="{{ student.avatar.url }}" class="avatar avatar-sm me-3">
+                              </div>
+                              <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm text-capitalize"><a href="{% url 'student_profile' student.student_id %}">{{ student.firstname }} {{ student.lastname }} ( {{ student.gender }}, {{ student.age}} )</a></h6>
+                              <p class="text-sm text-secondary mb-0">{{ student.student_id }}</p>
+                              </div>
+                          </div>
+                          </td>
+
+                          <td class="align-middle text-center text-sm">
+                              
+                          {% for guard in student.guardians.all %}
+                              <p class="text-sm font-weight-bold mb-0 text-capitalize">{{ guard.user.first_name }} {{ guard.user.last_name}}</p>
+                              
+                              <p class="text-sm text-secondary mb-0 text-uppercase">( {{ guard.relationship }} )</p>
+                          {% empty  %}
+
+                          <p class="text-sm text-secondary mb-0">No guardian assigned</p>
+                          {% endfor %}
+                          </td>
+                          <td class="align-middle text-center">
+                              {% for guard in student.guardians.all %}
+                              <p class="text-sm font-weight-bold mb-0">{{ guard.contact_number }}</p>
+                              <p class="text-sm text-secondary mb-0">{{ guard.address }}</p>
+                              {% endfor %}
+                          </td>
+                          
+                          <td class="align-middle text-center">
+                              <span class="text-secondary text-sm font-weight-normal"><a href="{% url 'section_detail' student.year_level_section.slug %}">{{ student.year_level_section}}</a></span>
+                          </td>
+
+                          <td class="">
+                            <span class="text-secondary text-sm font-weight-normal">
+                                <a type="button" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#update_student" 
+                                   data-student-id="{{ student.id }}"
+                                   data-current-section="{{ student.year_level_section }}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                            </span>
                         </td>
 
-                        <td class="align-middle text-center text-sm">
-                            
-                        {% for guard in student.guardians.all %}
-                            <p class="text-sm font-weight-bold mb-0 text-capitalize">{{ guard.user.first_name }} {{ guard.user.last_name}}</p>
-                            
-                            <p class="text-sm text-secondary mb-0 text-uppercase">( {{ guard.relationship }} )</p>
-                        {% empty  %}
-
-                        <p class="text-sm text-secondary mb-0">No guardian assigned</p>
-                        {% endfor %}
-                        </td>
-                        <td class="align-middle text-center">
-                            {% for guard in student.guardians.all %}
-                            <p class="text-sm font-weight-bold mb-0">{{ guard.contact_number }}</p>
-                            <p class="text-sm text-secondary mb-0">{{ guard.address }}</p>
-                            {% endfor %}
-                        </td>
-                        
-                        <td class="align-middle text-center">
-                            <span class="text-secondary text-sm font-weight-normal"><a href="{% url 'section_detail' student.year_level_section.slug %}">{{ student.year_level_section}}</a></span>
-                        </td>
-
-                        <td class="">
-                          <span class="text-secondary text-sm font-weight-normal"><a href=""><i class="fa fa-edit"></i></a></span>
-                        </td>
-
-                    </tr>
+                      </tr>
 
                     {% endfor %}
 
@@ -226,6 +234,49 @@
 </div>
 
 
+<div class="modal fade" id="update_student" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+          
+      <div class="modal-content">
+          <form method="POST" enctype="multipart/form-data" id="update-student-form" action="{% url 'update_student_section'%}">
+              {% csrf_token %}
+              <input type="hidden" name="student_id" id="student_id_modal">
+              <div class="modal-header">
+                  <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Update Student Section</h5>
+                  <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+       
+                  <p class="form-label">Current Section</p>
+                  <div class="input-group input-group-outline my-3">
+                    
+                    <input type="text" id="current_section" class="form-control">
+                  </div>
+
+                  <div class="input-group input-group-static mb-4">
+                    <label for="" class="ms-0">Example select</label>
+                    <select class="form-control" name="section" id="select_section">
+                      {% for sec in year_level_section %}
+                        <option value="{{ sec.id }}">{{ sec }}</option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+              </div>
+
+              <div class="modal-footer">
+                  <button type="submit" class="btn bg-gradient-info">Save Changes</button>
+              </div>
+                  
+          </form>
+      </div>
+
+  </div>
+</div>
+
 
 
 
@@ -235,7 +286,29 @@
 
 {% block js %}
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Listen for the show event on the modal
+    var updateStudentModal = document.getElementById('update_student');
+    updateStudentModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget; // Button that triggered the modal
 
+        // Extract student details from data attributes
+        var studentId = button.getAttribute('data-student-id');
+        var currentSection = button.getAttribute('data-current-section');
+
+        // Update the modal's content.
+        var modalBodyInput = updateStudentModal.querySelector('#current_section');
+        var modalSelect = updateStudentModal.querySelector('#select_section');
+        var modalStudent = updateStudentModal.querySelector('#student_id_modal')
+        // Set the values to the input fields
+        modalBodyInput.value = currentSection;
+        modalStudent.value = studentId;
+        modalSelect.value = ""; // Reset select if needed, or set a specific value if you want
+    });
+});
+
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

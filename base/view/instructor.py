@@ -128,11 +128,14 @@ def instructor_students_list(request):
     students = Student.objects.filter(year_level_section__in=year_level_sections)
     groups_info = get_user_chat_groups(request.user)  # Calling the reusable function
     instructor_subjects_ = instructor_subjects(request.user)
+
+
     context = {
         'instructor': instructor,
         'students': students,
         'groups_info': groups_info,
-        'year_level_sections': instructor_subjects_
+        'year_level_sections': instructor_subjects_,
+    
     }
     
     return render(request, 'base/instructor/student_list.html', context)

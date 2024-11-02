@@ -270,11 +270,11 @@
         <div class="modal-body">
           <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-md-4">
               
               <div class="input-group input-group-static mb-4">
                 
-                <label for="exampleFormControlSelect1" class="ms-0">Please select year and section:</label>
+                <label for="exampleFormControlSelect1" class="ms-0">Year and section:</label>
                 <select name="year_section" class="form-control" id="exampleFormControlSelect1">
                   
                     <option value="{{year_level_section.id}}"> {{ year_level_section.year_level }}: {{ year_level_section.section }}</option>
@@ -284,7 +284,7 @@
 
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="input-group input-group-static mb-4">
                 <label for="exampleFormControlSelect1" class="ms-0">Subject Name:</label>
                 
@@ -292,6 +292,16 @@
               </div>
             
             </div>
+
+            <div class="col-md-4">
+              <div class="input-group input-group-static mb-4">
+                <label for="exampleFormControlSelect1" class="ms-0">Subject Code:</label>
+                
+                <input type="text" name="subject_code" required class="form-control" placeholder="Math3000" aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+            
+            </div>
+
 
             <div class="col-md-4">
               <div class="input-group input-group-static">

@@ -11,9 +11,9 @@
 
 <div class="row">
     <div class="d-flex justify-content-between align-items-center mt-4">
-        <h6 class="m-3">Subjects</h6>
+        <h6 class="m-3">Sections</h6>
         <p class="text-sm mb-0">
-            <a href="" class="btn bg-gradient-success" type="button" data-bs-toggle="modal" data-bs-target="#add_subject"><span class="font-weight-bold text-white ms-1"><i class="fa fa-plus mx-2"></i>Add Subject</span></a>
+            <a href="" class="btn bg-gradient-success" type="button" data-bs-toggle="modal" data-bs-target="#add-section"><span class="font-weight-bold text-white ms-1"><i class="fa fa-plus mx-2"></i>Add Section</span></a>
         </p>
     </div>
 
@@ -216,6 +216,64 @@
 </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="add-section" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Add Year Level and Section</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form method="POST" action="{% url 'add_section' %}" id="add-section-form">
+          {% csrf_token %}
+          <div class="modal-body">
+
+              <div class="row">
+
+                  <div class="col-md-6">
+                      <div class="input-group input-group-static mb-4">
+                          <label for="exampleFormControlSelect1" class="ms-0">Select Year: </label>
+                          <select class="form-control" id="" name="year">
+                          <option value="Grade 1">Grade 1</option>
+                          <option value="Grade 2">Grade 2</option>
+                          <option value="Grade 3">Grade 3</option>
+                          <option value="Grade 4">Grade 4</option>
+                          <option value="Grade 5">Grade 5</option>
+                          <option value="Grade 6">Grade 6</option>
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="col-md-6 mt-1">
+                      <div class="input-group input-group-outline my-3">
+                          <input type="text" name="section" placeholder="Section Name..." class="form-control" required>
+                      </div>
+                  </div>
+
+                  <div class="alert alert-warning" role="alert" id="alert-message" style="display: none;"></div>
+
+
+              
+              </div>
+
+
+
+
+
+          </div>
+          <div class="modal-footer">
+          <button type="submit" class="btn bg-gradient-info">Save</button>
+          </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
 
 {% block js %}
@@ -275,6 +333,41 @@
 </script>
 -->
 
+
+
+<script>
+  $(document).ready(function() {
+      $('#add-section-form').on('submit', function(e) {
+          e.preventDefault(); // Prevent the default form submission
+  
+          $.ajax({
+              type: 'POST',
+              url: '{% url "add_section" %}', // Ensure this points to the correct URL
+              data: $(this).serialize(),
+              success: function(response) {
+                  Swal.fire({
+                      icon: 'success',
+                      title: 'Success',
+                      text: response.message,
+                  }).then(() => {
+                      // Redirect only if the slug is present
+                      if (response.slug) {
+                          window.location.href = `/section/${response.slug}/`;
+                      }
+                  });
+              },
+              error: function(xhr) {
+                  let response = JSON.parse(xhr.responseText);
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: response.message,
+                  });
+              }
+          });
+      });
+  });
+</script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('subject-form').addEventListener('submit', function(event) {

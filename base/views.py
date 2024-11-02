@@ -328,6 +328,18 @@ def student_page(request):
     
     return render(request, 'base/admin/students.html', context)
 
+def update_student_section(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        section_id = request.POST.get('section')
+
+        student = get_object_or_404(Student, id=student_id)
+        section = get_object_or_404(YearLevelSection, id=section_id)
+
+        student.year_level_section = section
+        student.save()
+
+        return redirect('student_page')
 
 def student_profile(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
