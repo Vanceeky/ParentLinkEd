@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
+from django.utils.crypto import get_random_string
 
 # Create your models here.
 
@@ -18,11 +19,24 @@ class Subject(models.Model):
     def __str__(self):
         return f"{self.name} - {self.day} {self.start_time} - {self.end_time}"
     
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(f"{self.subject_code} - {self.name}")
-        super().save(*args, **kwargs)
+    def get_unique_slug(self):
+        # Generate a base slug
+        base_slug = f"{self.subject_code} - {self.name}"
+        unique_slug = slugify(base_slug)
 
+        # Check if the generated slug already exists
+        if Subject.objects.filter(slug=unique_slug).exists():
+            # If it does, append a random string to make it unique
+            unique_slug = f"{unique_slug}-{get_random_string(length=6)}"
+
+        return unique_slug
+
+    def save(self, *args, **kwargs):
+        # If slug is not set, generate a unique slug
+        if not self.slug:
+            self.slug = self.get_unique_slug()
+
+        super().save(*args, **kwargs)
 
 class Instructor(models.Model):
 

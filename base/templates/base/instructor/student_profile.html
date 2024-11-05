@@ -453,6 +453,7 @@
 
 {% block js %}
 
+  
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -513,58 +514,92 @@
             button.addEventListener("click", function(event) {
                 const row = event.target.closest("tr");
 
-                // Get subject ID from the button's data attribute
+                
                 const subjectId = event.target.closest("a").getAttribute("data-subject-id");
 
-                // Get subject name and grades from the row
+               
                 const subjectName = row.querySelector("td:first-child p").textContent;
-                const quarter1 = row.querySelector("td:nth-child(2) span").textContent;
-                const quarter2 = row.querySelector("td:nth-child(3) span").textContent;
-                const quarter3 = row.querySelector("td:nth-child(4) span").textContent;
-                const quarter4 = row.querySelector("td:nth-child(5) span").textContent;
+                const quarter1 = parseFloat(row.querySelector("td:nth-child(2) span").textContent.trim()) || 0; // Convert to number, default to 0
+                const quarter2 = parseFloat(row.querySelector("td:nth-child(3) span").textContent.trim()) || 0; // Convert to number, default to 0
+                const quarter3 = parseFloat(row.querySelector("td:nth-child(4) span").textContent.trim()) || 0; // Convert to number, default to 0
+                const quarter4 = parseFloat(row.querySelector("td:nth-child(5) span").textContent.trim()) || 0; // Convert to number, default to 0
 
-                // Set values in the modal
+             
                 document.querySelector("#update-grade-modal input[name='subject']").value = subjectName;
                 document.querySelector("#update-grade-modal input[name='1st']").value = quarter1;
                 document.querySelector("#update-grade-modal input[name='2nd']").value = quarter2;
                 document.querySelector("#update-grade-modal input[name='3rd']").value = quarter3;
                 document.querySelector("#update-grade-modal input[name='4th']").value = quarter4;
-                document.querySelector("#subject-id-field").value = subjectId;  // Set the subject ID
+                document.querySelector("#subject-id-field").value = subjectId; 
+
+ 
+                 const quarter2Input = document.querySelector("#update-grade-modal input[name='2nd']");
+                 const quarter3Input = document.querySelector("#update-grade-modal input[name='3rd']");
+                 const quarter4Input = document.querySelector("#update-grade-modal input[name='4th']");
+ 
+              
+                 if (quarter1 === 0) {
+                     quarter2Input.disabled = true;
+                     quarter2Input.value = ''; 
+                 } else {
+                     quarter2Input.disabled = false;
+                 }
+ 
+              
+                 if (quarter2 === 0) {
+                     quarter3Input.disabled = true;
+                     quarter3Input.value = ''; 
+                 } else {
+                     quarter3Input.disabled = false;
+                 }
+ 
+          
+                 if (quarter3 === 0) {
+                     quarter4Input.disabled = true;
+                     quarter4Input.value = ''; 
+                 } else {
+                     quarter4Input.disabled = false;
+                 }
+     
             });
         });
+
+
+        
     });
+
 </script>
 
 <script>
     document.getElementById('add-grade-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting the traditional way
+        event.preventDefault(); 
     
         const formData = new FormData(this);
     
-        fetch(this.action, { // Use form's action attribute
+        fetch(this.action, { 
             method: 'POST',
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': '{{ csrf_token }}'  // Add CSRF token for security
+                'X-CSRFToken': '{{ csrf_token }}' 
             }
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data); // Log the data for debugging
+            console.log(data); 
             if (data.success) {
-                // Show success alert
+            
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
                     text: data.message,
                     confirmButtonText: 'Okay'
                 }).then(() => {
-                    // Reload the page after confirmation
+                 
                     location.reload();
                 });
             } else {
-                // Show error alert
+           
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -574,7 +609,7 @@
             }
         })
         .catch(error => {
-            console.error('Fetch error:', error); // Log fetch errors for debugging
+            console.error('Fetch error:', error); 
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',

@@ -299,6 +299,7 @@ def add_grade(request):
     return JsonResponse({'success': False, 'message': "Invalid request method."}, status=400)
 
 
+
 def update_grade(request):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
@@ -308,17 +309,28 @@ def update_grade(request):
         quarter_3 = request.POST.get('3rd')
         quarter_4 = request.POST.get('4th')
 
+        print(quarter_2, quarter_3, quarter_4)
+
         try:
             # Retrieve the Grade instance for the student and subject
             grade = Grade.objects.get(student_id=student_id, subject_id=subject_id)
 
-            # Ensure each quarter is filled sequentially
-            if quarter_2 and not grade.quarter_1:
-                return JsonResponse({'success': False, 'message': "Please enter a grade for the 1st Quarter before adding the 2nd Quarter."}, status=400)
-            if quarter_3 and not grade.quarter_2:
-                return JsonResponse({'success': False, 'message': "Please enter a grade for the 2nd Quarter before adding the 3rd Quarter."}, status=400)
-            if quarter_4 and not grade.quarter_3:
-                return JsonResponse({'success': False, 'message': "Please enter a grade for the 3rd Quarter before adding the 4th Quarter."}, status=400)
+
+                
+
+      # Check if we're updating the 2nd and 3rd or 3rd and 4th together
+            # Ensure 2nd and 3rd quarter grades are added sequentially
+            if quarter_2 and quarter_3:  # If both 2nd and 3rd quarters are being updated
+                if not grade.quarter_2:  # Check if the 2nd quarter grade is None or empty
+                    return JsonResponse({'success': False, 'message': "Please enter a grade for the 2nd Quarter before adding the 3rd Quarter."}, status=400)
+
+            # Ensure 3rd and 4th quarter grades are added sequentially
+            if quarter_3 and quarter_4:  # If both 3rd and 4th quarters are being updated
+                if not grade.quarter_3:  # Check if the 3rd quarter grade is None or empty
+                    return JsonResponse({'success': False, 'message': "Please enter a grade for the 3rd Quarter before adding the 4th Quarter."}, status=400)
+
+                
+                
 
             # Update grades if present in the request
             grade.quarter_1 = float(quarter_1) if quarter_1 else grade.quarter_1
@@ -337,7 +349,6 @@ def update_grade(request):
             return JsonResponse({'success': False, 'message': "An error occurred while updating the grade: " + str(e)}, status=500)
 
     return JsonResponse({'success': False, 'message': "Invalid request method."}, status=400)
-
 
 
 def get_user_groups(user):

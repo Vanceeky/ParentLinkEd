@@ -40,14 +40,14 @@
 
   <link rel="stylesheet" href="/static/assets/css/splide.min.css">
 
-  <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+  <script src="/static/assets/js/hyperscript.js"></script>
 
-  <script src="https://unpkg.com/htmx.org@2.0.2/dist/htmx.js" integrity="sha384-yZq+5izaUBKcRgFbxgkRYwpHhHHCpp5nseXp0MEQ1A4MTWVMnqkmcuFez8x5qfxr" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+  <script src="/static/assets/js/htmx.js"></script>
+  <script src="/static/assets/js/ws.js"></script>
   
 <!-- FullCalendar CSS -->
 <!-- FullCalendar CSS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet" />
+<link href="/static/assets/css/calendar.css" rel="stylesheet" />
 
 
 <link rel="manifest" href="/static/manifest.json">
@@ -475,7 +475,7 @@
 
 
            <!--   Core JS Files   -->
-  {% include 'includes/scripts.html ' %}
+  {% include 'includes/scripts.html' %}
 
 
   {% block js %}

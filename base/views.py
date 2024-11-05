@@ -209,6 +209,7 @@ def add_subject(request):
         try:
             year_section_id = request.POST.get('year_section')
             subject_name = request.POST.get('subject_name')
+            subject_code = request.POST.get('subject_code')
             day = request.POST.get('day')
             start_time = request.POST.get('start_time')
             end_time = request.POST.get('end_time')
@@ -233,6 +234,7 @@ def add_subject(request):
             subject = Subject.objects.create(
                 name=subject_name,
                 day=day,
+                subject_code=subject_code,
                 start_time=start_time,
                 end_time=end_time,
                 description=description,
